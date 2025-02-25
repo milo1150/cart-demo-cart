@@ -14,7 +14,7 @@ type CheckoutItem struct {
 
 	// External relation
 	UserId    uint
-	CouponId  uint
+	CouponId  *uint
 	PaymentId uint
 }
 

@@ -1,6 +1,7 @@
 package database
 
 import (
+	"cart-service/internal/models"
 	"fmt"
 	"log"
 	"os"
@@ -29,7 +30,5 @@ func ConnectDatabase() *gorm.DB {
 }
 
 func RunAutoMigrate(db *gorm.DB) {
-	// Shop should be created first since Product and Coupon reference it via ShopID
-	// Product must exist before ProductCategory, because ProductCategory has a many-to-many relationship with Product
-	db.AutoMigrate()
+	db.AutoMigrate(&models.Cart{}, &models.CartItem{}, &models.CheckoutItem{})
 }

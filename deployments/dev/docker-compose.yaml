@@ -15,18 +15,29 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+    networks:
+      - 'cart-demo'
   app:
-    container_name: go-app-cart
     build:
       context: ../../
       dockerfile: deployments/dev/Dockerfile
     ports:
-      - 8084:1323
+      - 1323
     volumes:
-      - ../../:/app # Important to bind/mount codebase dir to /app dir for live reload
+      - ../../:/app
     depends_on:
       postgres-cart:
         condition: service_healthy
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.cart-container.rule=PathPrefix(`/cart`)'
+      - 'traefik.http.services.cart-container.loadbalancer.server.port=1323'
+    networks:
+      - 'cart-demo'
 
 volumes:
   postgres-data:
+
+networks:
+  cart-demo:
+    external: true

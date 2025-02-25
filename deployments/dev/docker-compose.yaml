@@ -21,7 +21,7 @@ services:
     build:
       context: ../../
       dockerfile: deployments/dev/Dockerfile
-    ports:
+    expose:
       - 1323
     volumes:
       - ../../:/app

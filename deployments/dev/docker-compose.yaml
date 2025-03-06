@@ -16,7 +16,8 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - 'cart-demo'
+      - cart-demo
+
   app:
     build:
       context: ../../
@@ -33,11 +34,11 @@ services:
       - 'traefik.http.routers.cart-container.rule=PathPrefix(`/cart`)'
       - 'traefik.http.services.cart-container.loadbalancer.server.port=1323'
     networks:
-      - 'cart-demo'
+      - cart-demo
 
 volumes:
   postgres-data:
 
 networks:
   cart-demo:
-    external: true
+    driver: bridge

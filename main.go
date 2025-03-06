@@ -6,7 +6,6 @@ import (
 	"cart-service/internal/middlewares"
 	"cart-service/internal/routes"
 	"cart-service/internal/types"
-	"net/http"
 
 	"github.com/labstack/echo/v4"
 )
@@ -32,11 +31,6 @@ func main() {
 
 	// Init Route
 	routes.RegisterAppRoutes(e, appState)
-
-	// TODO: delete
-	e.GET("/cart", func(c echo.Context) error {
-		return c.JSON(http.StatusOK, "Cart service !!!")
-	})
 
 	// Start Server
 	e.Logger.Fatal(e.Start(":1323"))

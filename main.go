@@ -4,6 +4,7 @@ import (
 	"cart-service/internal/database"
 	"cart-service/internal/loader"
 	"cart-service/internal/middlewares"
+	"cart-service/internal/nats"
 	"cart-service/internal/routes"
 	"cart-service/internal/types"
 
@@ -14,13 +15,22 @@ func main() {
 	// Load ENV
 	loader.LoadEnv()
 
+	// NATS
+	nc := nats.ConnectNATS()
+	defer nc.Close()
+
 	// Database handler
 	db := database.ConnectDatabase()
 	database.RunAutoMigrate(db)
 
+	// Initialize Zap Logger
+	logger := middlewares.InitializeZapLogger()
+
 	// Global state
 	appState := &types.AppState{
-		DB: db,
+		DB:   db,
+		NATS: nc,
+		Log:  logger,
 	}
 
 	// Creates an instance of Echo.
@@ -31,6 +41,9 @@ func main() {
 
 	// Init Route
 	routes.RegisterAppRoutes(e, appState)
+
+	// Init NATS Pub/Sub
+	nats.SubscribeToUserService(nc, logger)
 
 	// Start Server
 	e.Logger.Fatal(e.Start(":1323"))

@@ -41,4 +41,5 @@ volumes:
 
 networks:
   cart-demo:
+    name: cart-demo
     driver: bridge

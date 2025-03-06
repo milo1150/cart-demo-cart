@@ -1,6 +1,8 @@
 package models
 
 import (
+	"time"
+
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
@@ -29,4 +31,17 @@ func (c *CartItem) BeforeCreate(tx *gorm.DB) error {
 		c.Uuid = uuidV7
 	}
 	return nil
+}
+
+type CartItemJson struct {
+	ID        uint      `json:"id"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+	Uuid      uuid.UUID `json:"uuid"`
+	Name      string    `json:"name"`
+	Price     float32   `json:"price"`
+	Quantity  uint      `json:"quantity"`
+	CartId    uint      `json:"cart_id"`
+	ProductId uint      `json:"product_id"`
+	ShopId    uint      `json:"shop_id"`
 }

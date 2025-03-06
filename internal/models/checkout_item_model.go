@@ -7,10 +7,8 @@ import (
 
 type CheckoutItem struct {
 	gorm.Model
-	Uuid uuid.UUID `gorm:"not null;type:uuid;unique;index"`
-
-	// Internal relation
-	CartItemID uint
+	Uuid         uuid.UUID    `gorm:"not null;type:uuid;unique;index"`
+	CartItemInfo CartItemJson `gorm:"type:jsonb;not null"`
 
 	// External relation
 	UserId    uint

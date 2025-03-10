@@ -7,9 +7,9 @@ import (
 
 type Cart struct {
 	gorm.Model
-	UserId uint
-	Uuid   uuid.UUID `gorm:"not null;type:uuid;unique;index"`
+	Uuid uuid.UUID `gorm:"not null;type:uuid;unique;index"`
 
+	UserId    uint `gorm:"not null"`
 	CartItems []CartItem
 }
 

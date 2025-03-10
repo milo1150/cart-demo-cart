@@ -6,6 +6,7 @@ import (
 
 	"github.com/nats-io/nats.go"
 	"go.uber.org/zap"
+	"gorm.io/gorm"
 )
 
 func ConnectNATS() *nats.Conn {
@@ -20,6 +21,6 @@ func ConnectNATS() *nats.Conn {
 	return nc
 }
 
-func SubscribeToUserService(nc *nats.Conn, log *zap.Logger) {
-	go SubscribeCreateUserEvent(nc, log)
+func SubscribeToUserService(nc *nats.Conn, log *zap.Logger, db *gorm.DB) {
+	go SubscribeCreateUserEvent(nc, log, db)
 }

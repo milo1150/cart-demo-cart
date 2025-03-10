@@ -19,6 +19,8 @@ func main() {
 	nc := nats.ConnectNATS()
 	defer nc.Close()
 
+	// TODO: try JetStream
+
 	// Database handler
 	db := database.ConnectDatabase()
 	database.RunAutoMigrate(db)
@@ -43,7 +45,7 @@ func main() {
 	routes.RegisterAppRoutes(e, appState)
 
 	// Init NATS Pub/Sub
-	nats.SubscribeToUserService(nc, logger)
+	nats.SubscribeToUserService(nc, logger, db)
 
 	// Start Server
 	e.Logger.Fatal(e.Start(":1323"))

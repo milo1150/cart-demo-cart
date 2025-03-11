@@ -1,6 +1,6 @@
 module cart-service
 
-go 1.24.0
+go 1.24.1
 
 require (
 	github.com/davecgh/go-spew v1.1.1
@@ -8,8 +8,10 @@ require (
 	github.com/joho/godotenv v1.5.1
 	github.com/labstack/echo/v4 v4.13.3
 	github.com/milo1150/cart-demo-pkg v1.0.5
+	github.com/milo1150/cart-demo-proto v0.0.0-20250310224615-23618a034c15
 	github.com/nats-io/nats.go v1.39.1
 	go.uber.org/zap v1.27.0
+	google.golang.org/grpc v1.71.0
 	gorm.io/driver/postgres v1.5.11
 	gorm.io/gorm v1.25.12
 )
@@ -42,4 +44,6 @@ require (
 	golang.org/x/sys v0.30.0 // indirect
 	golang.org/x/text v0.22.0 // indirect
 	golang.org/x/time v0.8.0 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20250115164207-1a7da9e5054f // indirect
+	google.golang.org/protobuf v1.36.5 // indirect
 )

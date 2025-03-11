@@ -2,6 +2,7 @@ package main
 
 import (
 	"cart-service/internal/database"
+	"cart-service/internal/grpc"
 	"cart-service/internal/loader"
 	"cart-service/internal/middlewares"
 	"cart-service/internal/nats"
@@ -46,6 +47,12 @@ func main() {
 
 	// Init NATS Pub/Sub
 	nats.SubscribeToUserService(nc, logger, db)
+
+	// Connect to gRPC Servers
+	conn := grpc.ConnectToShopProductGRPCServer()
+
+	// TODO: remove
+	grpc.GetProduct(conn)
 
 	// Start Server
 	e.Logger.Fatal(e.Start(":1323"))

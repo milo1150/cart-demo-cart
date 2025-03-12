@@ -9,10 +9,7 @@ import (
 
 type CartItem struct {
 	gorm.Model
-	Uuid     uuid.UUID `gorm:"not null;type:uuid;unique;index"`
-	Name     string
-	Price    float32
-	Quantity uint
+	Uuid uuid.UUID `gorm:"not null;type:uuid;unique;index"`
 
 	// Internal relation
 	CartID uint

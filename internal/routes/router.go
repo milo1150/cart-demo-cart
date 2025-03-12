@@ -18,5 +18,6 @@ func RegisterAppRoutes(e *echo.Echo, appState *types.AppState) {
 		return c.JSON(http.StatusOK, "Cart service default path")
 	})
 
+	CartRoutes(e, appState)
 	CartItemRoutes(e, appState)
 }

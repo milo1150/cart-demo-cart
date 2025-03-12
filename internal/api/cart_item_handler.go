@@ -12,6 +12,7 @@ import (
 	cartpkg "github.com/milo1150/cart-demo-pkg/pkg"
 )
 
+// TODO: change to add CartItem and create logic for increase quantity.
 func CreateCartItemHandler(c echo.Context, appState *types.AppState) error {
 	payload := schemas.CreateCartItemPayload{}
 	if err := c.Bind(&payload); err != nil {

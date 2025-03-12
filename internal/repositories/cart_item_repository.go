@@ -25,7 +25,7 @@ func CreateCartItem(db *gorm.DB, payload schemas.AddCartItemPayload) error {
 func CartItemExists(db *gorm.DB, shopId uint, productId uint) (bool, error) {
 	cartItem := &models.CartItem{}
 
-	query := db.Debug().Where("shop_id = ? AND product_id = ?", shopId, productId).Find(cartItem)
+	query := db.Where("shop_id = ? AND product_id = ?", shopId, productId).Find(cartItem)
 	if query.Error != nil {
 		return false, query.Error
 	}
@@ -40,7 +40,7 @@ func CartItemExists(db *gorm.DB, shopId uint, productId uint) (bool, error) {
 func FindCartItem(db *gorm.DB, shopId uint, productId uint) (*models.CartItem, error) {
 	cartItem := &models.CartItem{}
 
-	query := db.Debug().Where("shop_id = ? AND product_id = ?", shopId, productId).First(cartItem)
+	query := db.Where("shop_id = ? AND product_id = ?", shopId, productId).First(cartItem)
 	if query.Error != nil {
 		return nil, query.Error
 	}
@@ -49,7 +49,7 @@ func FindCartItem(db *gorm.DB, shopId uint, productId uint) (*models.CartItem, e
 }
 
 func UpdateCartItemQuantity(db *gorm.DB, shopId uint, productId uint, amount uint) error {
-	query := db.Model(&models.CartItem{}).Debug().
+	query := db.Model(&models.CartItem{}).
 		Where("shop_id = ? AND product_id = ?", shopId, productId).
 		UpdateColumn("quantity", amount)
 	if query.Error != nil {

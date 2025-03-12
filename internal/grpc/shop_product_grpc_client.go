@@ -2,7 +2,6 @@ package grpc
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"time"
 
@@ -24,38 +23,47 @@ func ConnectToShopProductGRPCServer() *grpc.ClientConn {
 	return conn
 }
 
-func GetProduct(conn *grpc.ClientConn) {
-	// Creates a gRPC client instance
-	client := pb.NewShopProductServiceClient(conn)
-
-	// Adds a timeout to the request (prevents infinite wait)
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-
-	// Call GetProduct
-	req := &pb.GetProductRequest{ProductId: 1}
-	res, err := client.GetProduct(ctx, req)
-	if err != nil {
-		log.Printf("Error calling GetProduct: %v", err)
-		return
-	}
-
-	// Print the response
-	fmt.Printf("Product: ID=%d, Name=%s, Price=%.2f, Stock=%d, ShopID=%d\n",
-		res.Id, res.Name, res.Price, res.Stock, res.ShopId)
-}
-
 func ProductExists(ctx context.Context, conn *grpc.ClientConn, productId uint) (bool, error) {
 	client := pb.NewShopProductServiceClient(conn)
 
-	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	newCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel() // Use the provided context with a timeout to prevent infinite blocking
 
 	req := &pb.CheckProductRequest{ProductId: uint64(productId)}
-	res, err := client.ProductExists(ctx, req)
+	res, err := client.ProductExists(newCtx, req)
 	if err != nil {
 		return false, err
 	}
 
 	return res.IsExists, nil
+}
+
+func GetProduct(ctx context.Context, conn *grpc.ClientConn, productId uint) (*pb.GetProductResponse, error) {
+	client := pb.NewShopProductServiceClient(conn)
+
+	newCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	req := &pb.GetProductRequest{ProductId: uint64(productId)}
+	res, err := client.GetProduct(newCtx, req)
+	if err != nil {
+		return nil, err
+	}
+
+	return res, err
+}
+
+func GetProducts(ctx context.Context, conn *grpc.ClientConn, productIds []uint64) (*pb.GetProductsResponse, error) {
+	client := pb.NewShopProductServiceClient(conn)
+
+	newCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	req := &pb.GetProductsRequest{ProductIds: productIds}
+	res, err := client.GetProducts(newCtx, req)
+	if err != nil {
+		return nil, err
+	}
+
+	return res, nil
 }

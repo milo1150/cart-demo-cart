@@ -1,38 +1,32 @@
 package services
 
 import (
-	"cart-service/internal/repositories"
+	"cart-service/internal/dto"
+	"cart-service/internal/grpc"
+	"cart-service/internal/models"
 	"cart-service/internal/schemas"
 	"cart-service/internal/types"
+
+	"github.com/samber/lo"
 )
 
-func AddCartItemToCart(appState *types.AppState, payload schemas.AddCartItemPayload) error {
-	// Check if CartItem already existed
-	cartItemExists, err := repositories.CartItemExists(appState.DB, payload.ShopId, payload.ProductId)
+func GetProductIDsFromCartItems(carts []models.CartItem) []uint64 {
+	productIds := lo.Map(carts, func(cart models.CartItem, index int) uint64 {
+		return uint64(cart.ProductId)
+	})
+	return productIds
+}
+
+func GetCartItemsProducts(cart *models.Cart, appState *types.AppState) (*schemas.GetCartResponse, error) {
+	// Query products from shop-product service
+	productIds := GetProductIDsFromCartItems(cart.CartItems)
+	res, err := grpc.GetProducts(appState.Context, appState.GrpcClientConn, productIds)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	// Update CartItem quantity
-	if cartItemExists {
-		cartItem, err := repositories.FindCartItem(appState.DB, payload.ShopId, payload.ProductId)
-		if err != nil {
-			return err
-		}
+	// Transform cart detail
+	cartDto := dto.TransformCartDetail(*cart, res.Products)
 
-		increase := payload.Quantity + cartItem.Quantity
-
-		if err := repositories.UpdateCartItemQuantity(appState.DB, payload.ShopId, payload.ProductId, increase); err != nil {
-			return err
-		}
-	}
-
-	// Create new CartItem
-	if !cartItemExists {
-		if err := repositories.CreateCartItem(appState.DB, payload); err != nil {
-			return err
-		}
-	}
-
-	return nil
+	return &cartDto, nil
 }

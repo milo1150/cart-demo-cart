@@ -2,6 +2,7 @@ package api
 
 import (
 	"cart-service/internal/repositories"
+	"cart-service/internal/services"
 	"cart-service/internal/types"
 	"net/http"
 	"strconv"
@@ -10,7 +11,7 @@ import (
 	cartpkg "github.com/milo1150/cart-demo-pkg/pkg"
 )
 
-func GetCartDetailHandler(c echo.Context, appState *types.AppState) error {
+func GetCartHandler(c echo.Context, appState *types.AppState) error {
 	paramId := c.Param("id")
 
 	// Validate param
@@ -25,5 +26,11 @@ func GetCartDetailHandler(c echo.Context, appState *types.AppState) error {
 		return c.JSON(http.StatusInternalServerError, cartpkg.GetSimpleErrorMessage(err.Error()))
 	}
 
-	return c.JSON(http.StatusOK, cart)
+	// Transform Cart Response
+	res, err := services.GetCartItemsProducts(cart, appState)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err)
+	}
+
+	return c.JSON(http.StatusOK, res)
 }

@@ -8,17 +8,20 @@ import (
 )
 
 type CartItem struct {
-	gorm.Model
-	Uuid uuid.UUID `gorm:"not null;type:uuid;unique;index"`
+	ID        uint           `json:"id" gorm:"primarykey"`
+	CreatedAt time.Time      `json:"created_at"`
+	UpdatedAt time.Time      `json:"updated_at"`
+	DeletedAt gorm.DeletedAt `json:"deleted_at" gorm:"index"`
+	Uuid      uuid.UUID      `json:"uuid" gorm:"not null;type:uuid;unique;index"`
 
-	Quantity uint
+	Quantity uint `json:"quantity"`
 
 	// Internal relation
-	CartID uint
+	CartID uint `json:"cart_id"`
 
 	// External relation
-	ProductId uint
-	ShopId    uint
+	ProductId uint `json:"product_id"`
+	ShopId    uint `json:"shop_id"`
 }
 
 func (c *CartItem) BeforeCreate(tx *gorm.DB) error {

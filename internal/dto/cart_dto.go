@@ -44,7 +44,7 @@ func TransformCartItemDetail(cartItem models.CartItem, productDetail *pb.GetProd
 		Quantity: cartItem.Quantity,
 		CartID:   cartItem.CartID,
 		ShopId:   cartItem.ShopId,
-		Products: productDetail,
+		Product:  productDetail,
 	}
 	return result
 }

@@ -12,6 +12,6 @@ type CartItem struct {
 	BaseModelSchema
 	Quantity uint                   `json:"quantity"`
 	CartID   uint                   `json:"cart_id"`
-	Products *pb.GetProductResponse `json:"product"`
+	Product  *pb.GetProductResponse `json:"product"`
 	ShopId   uint                   `json:"shop_id"`
 }

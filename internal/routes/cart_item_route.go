@@ -10,7 +10,7 @@ import (
 func CartItemRoutes(e *echo.Echo, appState *types.AppState) {
 	cartItemGroups := e.Group("/cart-item")
 
-	cartItemGroups.POST("/create", func(c echo.Context) error {
-		return api.CreateCartItemHandler(c, appState)
+	cartItemGroups.POST("/add", func(c echo.Context) error {
+		return api.AddCartItemHandler(c, appState)
 	})
 }

@@ -2,8 +2,8 @@ package api
 
 import (
 	"cart-service/internal/grpc"
-	"cart-service/internal/repositories"
 	"cart-service/internal/schemas"
+	"cart-service/internal/services"
 	"cart-service/internal/types"
 	"net/http"
 
@@ -12,9 +12,8 @@ import (
 	cartpkg "github.com/milo1150/cart-demo-pkg/pkg"
 )
 
-// TODO: change to add CartItem and create logic for increase quantity.
-func CreateCartItemHandler(c echo.Context, appState *types.AppState) error {
-	payload := schemas.CreateCartItemPayload{}
+func AddCartItemHandler(c echo.Context, appState *types.AppState) error {
+	payload := schemas.AddCartItemPayload{}
 	if err := c.Bind(&payload); err != nil {
 		return c.JSON(http.StatusBadRequest, cartpkg.GetSimpleErrorMessage(err.Error()))
 	}
@@ -26,17 +25,18 @@ func CreateCartItemHandler(c echo.Context, appState *types.AppState) error {
 
 	// Validate product_id (gRPC)
 	isExists, err := grpc.ProductExists(appState.Context, appState.GrpcClientConn, payload.ProductId)
-	if !isExists {
-		return c.JSON(http.StatusBadRequest, cartpkg.GetSimpleErrorMessage("invalid product id"))
-	}
 	if err != nil {
 		return c.JSON(http.StatusServiceUnavailable, cartpkg.GetSimpleErrorMessage(err.Error()))
 	}
+	if !isExists {
+		return c.JSON(http.StatusBadRequest, cartpkg.GetSimpleErrorMessage("invalid product id"))
+	}
 
-	// Create CartItem
-	if err := repositories.CreateCartItem(appState.DB, payload); err != nil {
+	// Handle should create new cart item or update quantity
+	if err := services.AddCartItemToCart(appState, payload); err != nil {
 		return c.JSON(http.StatusInternalServerError, cartpkg.GetSimpleErrorMessage(err.Error()))
 	}
 
-	return c.JSON(http.StatusCreated, http.StatusCreated)
+	// return c.JSON(http.StatusCreated, http.StatusCreated)
+	return c.JSON(http.StatusOK, http.StatusOK)
 }

@@ -1,6 +1,7 @@
 package api
 
 import (
+	"cart-service/internal/grpc"
 	"cart-service/internal/repositories"
 	"cart-service/internal/schemas"
 	"cart-service/internal/types"
@@ -22,7 +23,14 @@ func CreateCartItemHandler(c echo.Context, appState *types.AppState) error {
 		return c.JSON(http.StatusBadRequest, errMap)
 	}
 
-	// TODO: validate shop_id and product_id before create CartItem
+	// Validate product_id (gRPC)
+	isExists, err := grpc.ProductExists(appState.Context, appState.GrpcClientConn, payload.ProductId)
+	if !isExists {
+		return c.JSON(http.StatusBadRequest, cartpkg.GetSimpleErrorMessage("invalid product id"))
+	}
+	if err != nil {
+		return c.JSON(http.StatusServiceUnavailable, cartpkg.GetSimpleErrorMessage(err.Error()))
+	}
 
 	// Create CartItem
 	if err := repositories.CreateCartItem(appState.DB, payload); err != nil {

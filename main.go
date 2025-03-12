@@ -8,6 +8,7 @@ import (
 	"cart-service/internal/nats"
 	"cart-service/internal/routes"
 	"cart-service/internal/types"
+	"context"
 
 	"github.com/labstack/echo/v4"
 )
@@ -29,11 +30,16 @@ func main() {
 	// Initialize Zap Logger
 	logger := middlewares.InitializeZapLogger()
 
+	// Connect to gRPC Servers
+	conn := grpc.ConnectToShopProductGRPCServer()
+
 	// Global state
 	appState := &types.AppState{
-		DB:   db,
-		NATS: nc,
-		Log:  logger,
+		DB:             db,
+		NATS:           nc,
+		Log:            logger,
+		GrpcClientConn: conn,
+		Context:        context.Background(),
 	}
 
 	// Creates an instance of Echo.
@@ -47,12 +53,6 @@ func main() {
 
 	// Init NATS Pub/Sub
 	nats.SubscribeToUserService(nc, logger, db)
-
-	// Connect to gRPC Servers
-	conn := grpc.ConnectToShopProductGRPCServer()
-
-	// TODO: remove
-	grpc.GetProduct(conn)
 
 	// Start Server
 	e.Logger.Fatal(e.Start(":1323"))

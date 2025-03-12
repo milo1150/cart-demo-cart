@@ -44,3 +44,18 @@ func GetProduct(conn *grpc.ClientConn) {
 	fmt.Printf("Product: ID=%d, Name=%s, Price=%.2f, Stock=%d, ShopID=%d\n",
 		res.Id, res.ProductName, res.Price, res.Stock, res.ShopId)
 }
+
+func ProductExists(ctx context.Context, conn *grpc.ClientConn, productId uint) (bool, error) {
+	client := pb.NewShopProductServiceClient(conn)
+
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel() // Use the provided context with a timeout to prevent infinite blocking
+
+	req := &pb.CheckProductRequest{ProductId: uint64(productId)}
+	res, err := client.ProductExists(ctx, req)
+	if err != nil {
+		return false, err
+	}
+
+	return res.IsExists, nil
+}

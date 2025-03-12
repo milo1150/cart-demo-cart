@@ -52,6 +52,8 @@ github.com/milo1150/cart-demo-pkg v1.0.5 h1:TqJAnQYYLIdcd1YpVdBRtAEUJi34CD6NLhg2
 github.com/milo1150/cart-demo-pkg v1.0.5/go.mod h1:1xMT7lpE9EqW00jsEo0lpO3G+IJQ5xw9kqhM3xKvRzk=
 github.com/milo1150/cart-demo-proto v0.0.0-20250310224615-23618a034c15 h1:8RuoSY31nwHY9W0J/0TRQ0TmttBPqNzFOSjkRKCTE84=
 github.com/milo1150/cart-demo-proto v0.0.0-20250310224615-23618a034c15/go.mod h1:QyHzyhPN0Z0fwMA58CqvlEfEp+7+tYE8htZgZSzKn70=
+github.com/milo1150/cart-demo-proto v1.0.0 h1:vNJYwbce4x5lutO8Rz39SX9uosHp5uK/CzqFeWPk3sU=
+github.com/milo1150/cart-demo-proto v1.0.0/go.mod h1:QyHzyhPN0Z0fwMA58CqvlEfEp+7+tYE8htZgZSzKn70=
 github.com/nats-io/nats.go v1.39.1 h1:oTkfKBmz7W047vRxV762M67ZdXeOtUgvbBaNoQ+3PPk=
 github.com/nats-io/nats.go v1.39.1/go.mod h1:MgRb8oOdigA6cYpEPhXJuRVH6UE/V4jblJ2jQ27IXYM=
 github.com/nats-io/nkeys v0.4.9 h1:qe9Faq2Gxwi6RZnZMXfmGMZkg3afLLOtrU+gDZJ35b0=

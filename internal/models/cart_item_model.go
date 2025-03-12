@@ -11,6 +11,8 @@ type CartItem struct {
 	gorm.Model
 	Uuid uuid.UUID `gorm:"not null;type:uuid;unique;index"`
 
+	Quantity uint
+
 	// Internal relation
 	CartID uint
 

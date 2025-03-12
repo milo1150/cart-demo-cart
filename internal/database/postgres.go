@@ -31,6 +31,4 @@ func ConnectDatabase() *gorm.DB {
 
 func RunAutoMigrate(db *gorm.DB) {
 	db.AutoMigrate(&models.Cart{}, &models.CartItem{}, &models.CheckoutItem{})
-
-	migrate_cart_items_202503120840_drop_columns(db)
 }

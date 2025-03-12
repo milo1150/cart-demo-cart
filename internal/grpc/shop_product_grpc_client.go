@@ -42,7 +42,7 @@ func GetProduct(conn *grpc.ClientConn) {
 
 	// Print the response
 	fmt.Printf("Product: ID=%d, Name=%s, Price=%.2f, Stock=%d, ShopID=%d\n",
-		res.Id, res.ProductName, res.Price, res.Stock, res.ShopId)
+		res.Id, res.Name, res.Price, res.Stock, res.ShopId)
 }
 
 func ProductExists(ctx context.Context, conn *grpc.ClientConn, productId uint) (bool, error) {

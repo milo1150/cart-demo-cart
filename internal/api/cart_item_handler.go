@@ -18,6 +18,7 @@ func AddCartItemHandler(c echo.Context, appState *types.AppState) error {
 		return c.JSON(http.StatusBadRequest, cartpkg.GetSimpleErrorMessage(err.Error()))
 	}
 
+	// Validate payload
 	validate := validator.New()
 	if errMap := cartpkg.ValidateJsonPayload(validate, payload); errMap != nil {
 		return c.JSON(http.StatusBadRequest, errMap)
@@ -37,6 +38,5 @@ func AddCartItemHandler(c echo.Context, appState *types.AppState) error {
 		return c.JSON(http.StatusInternalServerError, cartpkg.GetSimpleErrorMessage(err.Error()))
 	}
 
-	// return c.JSON(http.StatusCreated, http.StatusCreated)
 	return c.JSON(http.StatusOK, http.StatusOK)
 }

@@ -5,6 +5,7 @@ import (
 	"cart-service/internal/schemas"
 	"cart-service/internal/services"
 	"cart-service/internal/types"
+	"context"
 	"net/http"
 
 	"github.com/go-playground/validator/v10"
@@ -25,7 +26,7 @@ func AddCartItemHandler(c echo.Context, appState *types.AppState) error {
 	}
 
 	// Validate product_id (gRPC)
-	isExists, err := grpc.ProductExists(appState.Context, appState.GrpcClientConn, payload.ProductId)
+	isExists, err := grpc.ProductExists(context.Background(), appState.GrpcClientConn, payload.ProductId)
 	if err != nil {
 		return c.JSON(http.StatusServiceUnavailable, cartpkg.GetSimpleErrorMessage(err.Error()))
 	}

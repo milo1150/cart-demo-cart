@@ -6,6 +6,7 @@ import (
 	"cart-service/internal/models"
 	"cart-service/internal/schemas"
 	"cart-service/internal/types"
+	"context"
 
 	"github.com/samber/lo"
 )
@@ -20,7 +21,7 @@ func GetProductIDsFromCartItems(carts []models.CartItem) []uint64 {
 func GetCartItemsProducts(cart *models.Cart, appState *types.AppState) (*schemas.GetCartResponse, error) {
 	// Query products from shop-product service
 	productIds := GetProductIDsFromCartItems(cart.CartItems)
-	res, err := grpc.GetProducts(appState.Context, appState.GrpcClientConn, productIds)
+	res, err := grpc.GetProducts(context.Background(), appState.GrpcClientConn, productIds)
 	if err != nil {
 		return nil, err
 	}

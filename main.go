@@ -8,7 +8,6 @@ import (
 	"cart-service/internal/nats"
 	"cart-service/internal/routes"
 	"cart-service/internal/types"
-	"context"
 
 	"github.com/labstack/echo/v4"
 )
@@ -39,7 +38,6 @@ func main() {
 		NATS:           nc,
 		Log:            logger,
 		GrpcClientConn: conn,
-		Context:        context.Background(),
 	}
 
 	// Creates an instance of Echo.

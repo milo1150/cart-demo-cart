@@ -1,8 +1,6 @@
 package types
 
 import (
-	"context"
-
 	"github.com/nats-io/nats.go"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
@@ -14,5 +12,4 @@ type AppState struct {
 	NATS           *nats.Conn
 	Log            *zap.Logger
 	GrpcClientConn *grpc.ClientConn
-	Context        context.Context
 }

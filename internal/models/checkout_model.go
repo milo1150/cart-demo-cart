@@ -5,7 +5,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type CheckoutItem struct {
+type Checkout struct {
 	gorm.Model
 	Uuid         uuid.UUID    `gorm:"not null;type:uuid;unique;index"`
 	CartItemInfo CartItemJson `gorm:"type:jsonb;not null"`
@@ -13,10 +13,10 @@ type CheckoutItem struct {
 	// External relation
 	UserId    uint
 	CouponId  *uint
-	PaymentId uint
+	PaymentId uint // TODO: Queue for binding
 }
 
-func (c *CheckoutItem) BeforeCreate(tx *gorm.DB) error {
+func (c *Checkout) BeforeCreate(tx *gorm.DB) error {
 	if c.Uuid == uuid.Nil {
 		uuidV7, err := uuid.NewV7()
 		if err != nil {

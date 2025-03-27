@@ -9,4 +9,5 @@ import (
 func RegisterAppRoutes(e *echo.Echo, appState *types.AppState) {
 	CartRoutes(e, appState)
 	CartItemRoutes(e, appState)
+	CheckoutRoutes(e, appState)
 }

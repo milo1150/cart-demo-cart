@@ -3,14 +3,14 @@ module cart-service
 go 1.24.1
 
 require (
-	github.com/davecgh/go-spew v1.1.1
 	github.com/go-playground/validator/v10 v10.25.0
 	github.com/google/uuid v1.6.0
 	github.com/joho/godotenv v1.5.1
 	github.com/labstack/echo/v4 v4.13.3
-	github.com/milo1150/cart-demo-pkg v1.0.5
+	github.com/milo1150/cart-demo-pkg v1.0.6
 	github.com/milo1150/cart-demo-proto v1.0.2
 	github.com/nats-io/nats.go v1.39.1
+	github.com/samber/lo v1.49.1
 	go.uber.org/zap v1.27.0
 	google.golang.org/grpc v1.71.0
 	gorm.io/driver/postgres v1.5.11
@@ -34,7 +34,6 @@ require (
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/nats-io/nkeys v0.4.9 // indirect
 	github.com/nats-io/nuid v1.0.1 // indirect
-	github.com/samber/lo v1.49.1 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasttemplate v1.2.2 // indirect
 	go.uber.org/multierr v1.10.0 // indirect

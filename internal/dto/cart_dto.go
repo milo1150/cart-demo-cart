@@ -17,7 +17,7 @@ func TransformCartDetail(cart models.Cart, products []*pb.GetProductResponse) sc
 			Uuid:      cart.Uuid,
 		},
 		UserId:    cart.UserId,
-		CartItems: []schemas.CartItem{},
+		CartItems: []schemas.CartItemResponse{},
 	}
 
 	hashProducts := lo.KeyBy(products, func(product *pb.GetProductResponse) uint64 {
@@ -33,8 +33,8 @@ func TransformCartDetail(cart models.Cart, products []*pb.GetProductResponse) sc
 	return result
 }
 
-func TransformCartItemDetail(cartItem models.CartItem, productDetail *pb.GetProductResponse) schemas.CartItem {
-	result := schemas.CartItem{
+func TransformCartItemDetail(cartItem models.CartItem, productDetail *pb.GetProductResponse) schemas.CartItemResponse {
+	result := schemas.CartItemResponse{
 		BaseModelSchema: schemas.BaseModelSchema{
 			ID:        cartItem.ID,
 			CreatedAt: cartItem.CreatedAt,

@@ -50,8 +50,8 @@ github.com/mattn/go-isatty v0.0.20 h1:xfD0iDuEKnDkl03q4limB+vH+GxLEtL/jb4xVJSWWE
 github.com/mattn/go-isatty v0.0.20/go.mod h1:W+V8PltTTMOvKvAeJH7IuucS94S2C6jfK/D7dTCTo3Y=
 github.com/milo1150/cart-demo-pkg v1.0.5 h1:TqJAnQYYLIdcd1YpVdBRtAEUJi34CD6NLhg2ml7aeYM=
 github.com/milo1150/cart-demo-pkg v1.0.5/go.mod h1:1xMT7lpE9EqW00jsEo0lpO3G+IJQ5xw9kqhM3xKvRzk=
-github.com/milo1150/cart-demo-proto v1.0.1 h1:dakb2VvMi150Ax9NI657GCDUs3IDyAn8jkLaUzLZSZE=
-github.com/milo1150/cart-demo-proto v1.0.1/go.mod h1:QyHzyhPN0Z0fwMA58CqvlEfEp+7+tYE8htZgZSzKn70=
+github.com/milo1150/cart-demo-pkg v1.0.6 h1:EqjoXUe6CLnWS6lrRT8FePj8IOclWYa6+VXw1jKJD/E=
+github.com/milo1150/cart-demo-pkg v1.0.6/go.mod h1:PFgS7WV50MjHsolP9FVEomAY9oO4LtY+MzLjhjNlY34=
 github.com/milo1150/cart-demo-proto v1.0.2 h1:ZFYHwS02aH2/Lz5BXrXLerqGZAxc0mnqrkOU4B6OHNo=
 github.com/milo1150/cart-demo-proto v1.0.2/go.mod h1:QyHzyhPN0Z0fwMA58CqvlEfEp+7+tYE8htZgZSzKn70=
 github.com/nats-io/nats.go v1.39.1 h1:oTkfKBmz7W047vRxV762M67ZdXeOtUgvbBaNoQ+3PPk=

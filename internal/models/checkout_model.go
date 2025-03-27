@@ -1,14 +1,16 @@
 package models
 
 import (
+	"cart-service/internal/schemas"
+
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
 type Checkout struct {
 	gorm.Model
-	Uuid         uuid.UUID    `gorm:"not null;type:uuid;unique;index"`
-	CartItemInfo CartItemJson `gorm:"type:jsonb;not null"`
+	Uuid         uuid.UUID                 `gorm:"not null;type:uuid;unique;index"`
+	CartItemInfo schemas.CartItemInfoJsonb `gorm:"type:jsonb;not null"`
 
 	// External relation
 	UserId    uint

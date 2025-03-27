@@ -21,7 +21,7 @@ func GetProductIDsFromCartItems(carts []models.CartItem) []uint64 {
 func GetCartItemsProducts(cart *models.Cart, appState *types.AppState) (*schemas.GetCartResponse, error) {
 	// Query products from shop-product service
 	productIds := GetProductIDsFromCartItems(cart.CartItems)
-	res, err := grpc.GetProducts(context.Background(), appState.GrpcClientConn, productIds)
+	res, err := grpc.GetProducts(context.Background(), appState.GrpcShopProductClientConn, productIds)
 	if err != nil {
 		return nil, err
 	}

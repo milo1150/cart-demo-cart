@@ -2,22 +2,26 @@ package grpc
 
 import (
 	"context"
-	"log"
+	"fmt"
+	"os"
 	"time"
 
 	pb "github.com/milo1150/cart-demo-proto/pkg/shop_product"
+	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
 
-func ConnectToShopProductGRPCServer() *grpc.ClientConn {
+func ConnectToShopProductGRPCServer(log *zap.Logger) *grpc.ClientConn {
+	endpoint := os.Getenv("GRPC_SHOP_PRODUCT_ENDPOINT")
+
 	conn, err := grpc.NewClient(
-		"demo-shop-product-service-app-1:50051", // TODO: do not hard code
+		endpoint,
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 	)
 
 	if err != nil {
-		log.Printf("Failed to connect ShopProduct grpc server: %v", err)
+		log.Error(fmt.Sprintf("Failed to connect ShopProduct grpc server: %v", err))
 	}
 
 	return conn

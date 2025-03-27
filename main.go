@@ -30,14 +30,14 @@ func main() {
 	logger := middlewares.InitializeZapLogger()
 
 	// Connect to gRPC Servers
-	conn := grpc.ConnectToShopProductGRPCServer()
+	grpcShopProductClientConn := grpc.ConnectToShopProductGRPCServer(logger)
 
 	// Global state
 	appState := &types.AppState{
-		DB:             db,
-		NATS:           nc,
-		Log:            logger,
-		GrpcClientConn: conn,
+		DB:                        db,
+		NATS:                      nc,
+		Log:                       logger,
+		GrpcShopProductClientConn: grpcShopProductClientConn,
 	}
 
 	// Creates an instance of Echo.

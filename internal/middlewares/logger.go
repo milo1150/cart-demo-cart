@@ -24,6 +24,7 @@ func logger() echo.MiddlewareFunc {
 		LogProtocol: true,
 		LogRemoteIP: true,
 		LogMethod:   true,
+		LogError:    true,
 		LogValuesFunc: func(c echo.Context, v middleware.RequestLoggerValues) error {
 			logger.Info("request",
 				zap.String("IP", v.RemoteIP),
@@ -32,6 +33,7 @@ func logger() echo.MiddlewareFunc {
 				zap.String("method", v.Method),
 				zap.Int("status", v.Status),
 				zap.Duration("latency", v.Latency),
+				zap.Error(v.Error),
 			)
 			return nil
 		},

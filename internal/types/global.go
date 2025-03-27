@@ -8,8 +8,8 @@ import (
 )
 
 type AppState struct {
-	DB             *gorm.DB
-	NATS           *nats.Conn
-	Log            *zap.Logger
-	GrpcClientConn *grpc.ClientConn
+	DB                        *gorm.DB
+	NATS                      *nats.Conn
+	Log                       *zap.Logger
+	GrpcShopProductClientConn *grpc.ClientConn
 }

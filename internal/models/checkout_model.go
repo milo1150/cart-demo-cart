@@ -1,7 +1,10 @@
 package models
 
 import (
-	"cart-service/internal/schemas"
+	"database/sql/driver"
+	"encoding/json"
+	"errors"
+	"fmt"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"
@@ -9,8 +12,8 @@ import (
 
 type Checkout struct {
 	gorm.Model
-	Uuid         uuid.UUID                 `gorm:"not null;type:uuid;unique;index"`
-	CartItemInfo schemas.CartItemInfoJsonb `gorm:"type:jsonb;not null"`
+	Uuid         uuid.UUID         `gorm:"not null;type:uuid;unique;index"`
+	CartItemInfo CartItemInfoSlice `gorm:"type:jsonb;not null"`
 
 	// External relation
 	UserId    uint
@@ -27,4 +30,41 @@ func (c *Checkout) BeforeCreate(tx *gorm.DB) error {
 		c.Uuid = uuidV7
 	}
 	return nil
+}
+
+type CartItemInfoJson struct {
+	Id          uint             `json:"id" validate:"required,gt=0"`
+	CreatedAt   string           `json:"created_at" validate:"required"`
+	UpdatedAt   string           `json:"updated_at" validate:"required"`
+	Name        string           `json:"name" validate:"required"`
+	Description string           `json:"description" validate:"required"`
+	ImageUrl    string           `json:"image_url" validate:"required"`
+	Price       uint64           `json:"price" validate:"required"`
+	Stock       uint64           `json:"stock" validate:"required"`
+	Quantity    uint64           `json:"quantity" validate:"required"`
+	Shop        cartItemShopJson `json:"shop" validate:"required"`
+}
+
+type cartItemShopJson struct {
+	Id   uint   `json:"id" validate:"required,gt=0"`
+	Name string `json:"name" validate:"required"`
+}
+
+type CartItemInfoSlice []CartItemInfoJson
+
+// Scan scan value into Jsonb, implements sql.Scanner interface
+func (c *CartItemInfoSlice) Scan(value any) error {
+	bytes, ok := value.([]byte)
+	if !ok {
+		return errors.New(fmt.Sprint("Failed to unmarshal CartItemInfoSlice JSONB value:", value))
+	}
+	return json.Unmarshal(bytes, c)
+}
+
+// Value return json value, implement driver.Valuer interface
+func (c CartItemInfoSlice) Value() (driver.Value, error) {
+	if len(c) == 0 {
+		return nil, nil
+	}
+	return json.Marshal(c)
 }

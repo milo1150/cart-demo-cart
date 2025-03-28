@@ -48,8 +48,6 @@ github.com/mattn/go-colorable v0.1.13/go.mod h1:7S9/ev0klgBDR4GtXTXX8a3vIGJpMovk
 github.com/mattn/go-isatty v0.0.16/go.mod h1:kYGgaQfpe5nmfYZH+SKPsOc2e4SrIfOl2e/yFXSvRLM=
 github.com/mattn/go-isatty v0.0.20 h1:xfD0iDuEKnDkl03q4limB+vH+GxLEtL/jb4xVJSWWEY=
 github.com/mattn/go-isatty v0.0.20/go.mod h1:W+V8PltTTMOvKvAeJH7IuucS94S2C6jfK/D7dTCTo3Y=
-github.com/milo1150/cart-demo-pkg v1.0.5 h1:TqJAnQYYLIdcd1YpVdBRtAEUJi34CD6NLhg2ml7aeYM=
-github.com/milo1150/cart-demo-pkg v1.0.5/go.mod h1:1xMT7lpE9EqW00jsEo0lpO3G+IJQ5xw9kqhM3xKvRzk=
 github.com/milo1150/cart-demo-pkg v1.0.6 h1:EqjoXUe6CLnWS6lrRT8FePj8IOclWYa6+VXw1jKJD/E=
 github.com/milo1150/cart-demo-pkg v1.0.6/go.mod h1:PFgS7WV50MjHsolP9FVEomAY9oO4LtY+MzLjhjNlY34=
 github.com/milo1150/cart-demo-proto v1.0.2 h1:ZFYHwS02aH2/Lz5BXrXLerqGZAxc0mnqrkOU4B6OHNo=

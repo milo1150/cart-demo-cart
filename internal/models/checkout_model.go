@@ -5,20 +5,24 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"time"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
 type Checkout struct {
-	gorm.Model
-	Uuid         uuid.UUID         `gorm:"not null;type:uuid;unique;index"`
-	CartItemInfo CartItemInfoSlice `gorm:"type:jsonb;not null"`
+	ID           uint              `json:"id" gorm:"primarykey"`
+	CreatedAt    time.Time         `json:"created_at"`
+	UpdatedAt    time.Time         `json:"updated_at"`
+	DeletedAt    gorm.DeletedAt    `json:"deleted_at" gorm:"index"`
+	Uuid         uuid.UUID         `json:"uuid" gorm:"not null;type:uuid;unique;index"`
+	CartItemInfo CartItemInfoSlice `json:"cart_item_info" gorm:"type:jsonb;not null"`
 
 	// External relation
-	UserId    uint
-	CouponId  *uint
-	PaymentId uint // TODO: Queue for binding
+	UserId    uint  `json:"user_id"`
+	CouponId  *uint `json:"coupon_id"`
+	PaymentId uint  `json:"payment_id"` // TODO: Queue for binding
 }
 
 func (c *Checkout) BeforeCreate(tx *gorm.DB) error {

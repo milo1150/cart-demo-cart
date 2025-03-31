@@ -1,6 +1,7 @@
 package api
 
 import (
+	"cart-service/internal/nats"
 	"cart-service/internal/repositories"
 	"cart-service/internal/schemas"
 	"cart-service/internal/types"
@@ -10,7 +11,6 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 	cartpkg "github.com/milo1150/cart-demo-pkg/pkg"
-	"go.uber.org/zap"
 )
 
 func CreateCheckoutHandler(c echo.Context, appState *types.AppState) error {
@@ -39,10 +39,7 @@ func CreateCheckoutHandler(c echo.Context, appState *types.AppState) error {
 	}
 
 	// Publish message to payment service
-	_, err = appState.JS.Publish(c.Request().Context(), "checkout.created", cartpkg.UintToBytes(res.ID))
-	if err != nil {
-		appState.Log.Error("Failed to publish checkout.created message", zap.Error(err))
-	}
+	nats.PublishCreateCheckoutHandler(appState.JS, c.Request().Context(), res, appState.Log)
 
 	return c.JSON(http.StatusOK, res)
 }

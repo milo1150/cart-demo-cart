@@ -20,7 +20,8 @@ func main() {
 	nc := nats.ConnectNATS()
 	defer nc.Close()
 
-	// TODO: try JetStream
+	// NATS JetStream
+	js := nats.ConnectJetStream(nc)
 
 	// Database handler
 	db := database.ConnectDatabase()
@@ -36,6 +37,7 @@ func main() {
 	appState := &types.AppState{
 		DB:                        db,
 		NATS:                      nc,
+		JS:                        js,
 		Log:                       logger,
 		GrpcShopProductClientConn: grpcShopProductClientConn,
 	}
@@ -49,8 +51,9 @@ func main() {
 	// Init Route
 	routes.RegisterAppRoutes(e, appState)
 
-	// Init NATS Pub/Sub
-	nats.SubscribeToUserService(nc, logger, db)
+	// Run NATS services
+	go nats.SubscribeCreateUserEvent(nc, logger, db)
+	go nats.PublishCreateCheckoutEvent(js, logger)
 
 	// Start Server
 	e.Logger.Fatal(e.Start(":1323"))

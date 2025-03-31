@@ -35,3 +35,7 @@ cd scripts && ./dev-start.sh
 ```bash
 pgcli postgres://postgres:postgres@127.0.0.1:5434/cart_db
 ```
+
+## NATS JetStream
+
+- <https://github.com/nats-io/nats.go/blob/main/jetstream/README.md>

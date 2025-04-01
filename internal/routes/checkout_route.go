@@ -8,9 +8,9 @@ import (
 )
 
 func CheckoutRoutes(e *echo.Echo, appState *types.AppState) {
-	cartItemGroups := e.Group("/checkout")
+	checkoutGroups := e.Group("/checkout")
 
-	cartItemGroups.POST("/create", func(c echo.Context) error {
+	checkoutGroups.POST("/create", func(c echo.Context) error {
 		return api.CreateCheckoutHandler(c, appState)
 	})
 }

@@ -32,6 +32,7 @@ func main() {
 
 	// Connect to gRPC Servers
 	grpcShopProductClientConn := grpc.ConnectToShopProductGRPCServer(logger)
+	grpcPaymentClientConn := grpc.ConnectToPaymentGRPCServer(logger)
 
 	// Global state
 	appState := &types.AppState{
@@ -40,6 +41,7 @@ func main() {
 		JS:                        js,
 		Log:                       logger,
 		GrpcShopProductClientConn: grpcShopProductClientConn,
+		GrpcPaymentClientConn:     grpcPaymentClientConn,
 	}
 
 	// Creates an instance of Echo.

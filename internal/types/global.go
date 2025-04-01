@@ -14,4 +14,5 @@ type AppState struct {
 	JS                        jetstream.JetStream
 	Log                       *zap.Logger
 	GrpcShopProductClientConn *grpc.ClientConn
+	GrpcPaymentClientConn     *grpc.ClientConn
 }

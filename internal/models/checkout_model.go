@@ -19,7 +19,7 @@ type Checkout struct {
 
 	// External
 	UserId    uint `json:"user_id"`
-	PaymentId uint `json:"payment_id"` // TODO: Queue for binding
+	PaymentId uint `json:"payment_id"`
 }
 
 func (c *Checkout) BeforeCreate(tx *gorm.DB) error {

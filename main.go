@@ -53,9 +53,12 @@ func main() {
 	// Init Route
 	routes.RegisterAppRoutes(e, appState)
 
-	// Run NATS services
-	go nats.SubscribeCreateUserEvent(nc, logger, db)
+	// Run NATS Streams
 	go nats.PublishCreateCheckoutEvent(js, logger)
+
+	// Run NATS Consumers
+	go nats.SubscribeCreateUserEvent(nc, logger, db)
+	go nats.SubscribeCreatePaymentEvent(js, logger, db)
 
 	// Start Server
 	e.Logger.Fatal(e.Start(":1323"))

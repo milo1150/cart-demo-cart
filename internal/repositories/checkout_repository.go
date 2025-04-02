@@ -3,6 +3,7 @@ package repositories
 import (
 	"cart-service/internal/models"
 	"cart-service/internal/schemas"
+	"fmt"
 
 	"gorm.io/gorm"
 )
@@ -60,5 +61,21 @@ func (c *Checkout) GetCheckouts(userId uint) (*[]models.Checkout, error) {
 		return nil, query.Error
 	}
 
+	// TODO: query payment detail
+
 	return &result, nil
+}
+
+func (c *Checkout) UpdateCheckoutPaymentId(checkoutid, paymentId uint) error {
+	result := c.DB.Model(&models.Checkout{}).Where("id = ?", checkoutid).Update("payment_id", paymentId)
+
+	if result.Error != nil {
+		return result.Error
+	}
+
+	if result.RowsAffected == 0 {
+		return fmt.Errorf("no checkout record updated")
+	}
+
+	return nil
 }

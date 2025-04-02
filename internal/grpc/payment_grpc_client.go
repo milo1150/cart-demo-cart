@@ -28,17 +28,24 @@ func ConnectToPaymentGRPCServer(log *zap.Logger) *grpc.ClientConn {
 	return conn
 }
 
-func GetPayment(ctx context.Context, conn *grpc.ClientConn, paymentOrderId uint) (*pb.GetPaymentResponse, error) {
+func GetPayment(ctx context.Context, conn *grpc.ClientConn, paymentOrderId uint) (*pb.GetPaymentOrderResponse, error) {
 	client := pb.NewPaymentServiceClient(conn)
 
 	newCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 
-	req := &pb.GetPaymentRequest{PaymentOrderId: uint64(paymentOrderId)}
-	res, err := client.GetPayment(newCtx, req)
-	if err != nil {
-		return nil, err
-	}
+	req := &pb.GetPaymentOrderRequest{PaymentOrderId: uint64(paymentOrderId)}
 
-	return res, nil
+	return client.GetPayment(newCtx, req)
+}
+
+func GetPayments(ctx context.Context, conn *grpc.ClientConn, paymentIds []uint64) (*pb.GetPaymentOrderListResponse, error) {
+	client := pb.NewPaymentServiceClient(conn)
+
+	newCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	req := &pb.GetPaymentOrderListRequest{PaymentOrderIds: paymentIds}
+
+	return client.GetPayments(newCtx, req)
 }

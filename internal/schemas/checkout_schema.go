@@ -1,6 +1,11 @@
 package schemas
 
-import "cart-service/internal/models"
+import (
+	"cart-service/internal/models"
+	"time"
+
+	pb "github.com/milo1150/cart-demo-proto/pkg/payment"
+)
 
 type CreateCheckoutItem struct {
 	CheckoutItems CheckoutItemSlice `json:"checkout_items" validate:"required,dive"`
@@ -11,4 +16,16 @@ type CheckoutItemSlice []CheckoutItem
 type CheckoutItem struct {
 	Shop     models.CheckoutItemShopJson         `json:"shop" validate:"required"`
 	Products models.CheckoutItemProductJsonSlice `json:"product" validate:"required,dive"`
+}
+
+type CheckoutItemResponse struct {
+	ID            uint                        `json:"id"`
+	CreatedAt     time.Time                   `json:"created_at"`
+	UpdatedAt     time.Time                   `json:"updated_at"`
+	CheckoutItems []models.CheckoutItem       `json:"checkout_items"`
+	Payment       *pb.GetPaymentOrderResponse `json:"payment"`
+}
+
+type CheckoutItemSliceResponse struct {
+	Items []CheckoutItemResponse `json:"items"`
 }

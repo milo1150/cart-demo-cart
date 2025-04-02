@@ -18,7 +18,7 @@ type Checkout struct {
 	CheckoutItems []CheckoutItem `json:"checkout_items"`
 
 	// External
-	UserId    uint `json:"user_id"`
+	UserId    uint `json:"-"`
 	PaymentId uint `json:"payment_id"`
 }
 

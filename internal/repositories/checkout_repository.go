@@ -61,8 +61,6 @@ func (c *Checkout) GetCheckouts(userId uint) (*[]models.Checkout, error) {
 		return nil, query.Error
 	}
 
-	// TODO: query payment detail
-
 	return &result, nil
 }
 

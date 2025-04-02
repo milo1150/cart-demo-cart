@@ -1,6 +1,9 @@
 package api
 
 import (
+	"cart-service/internal/dto"
+	"cart-service/internal/grpc"
+	"cart-service/internal/models"
 	"cart-service/internal/nats"
 	"cart-service/internal/repositories"
 	"cart-service/internal/schemas"
@@ -11,6 +14,8 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 	cartpkg "github.com/milo1150/cart-demo-pkg/pkg"
+	"github.com/samber/lo"
+	"go.uber.org/zap"
 )
 
 func CreateCheckoutHandler(c echo.Context, appState *types.AppState) error {
@@ -50,11 +55,27 @@ func GetCheckoutsHandler(c echo.Context, appState *types.AppState) error {
 		return c.JSON(http.StatusBadRequest, cartpkg.GetSimpleErrorMessage(err.Error()))
 	}
 
+	// Query checkout list
 	rc := repositories.Checkout{DB: appState.DB}
-	res, err := rc.GetCheckouts(userId)
+	checkouts, err := rc.GetCheckouts(userId)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, cartpkg.GetSimpleErrorMessage(err.Error()))
 	}
 
-	return c.JSON(http.StatusOK, res)
+	// Query payment detail list from payment service
+	paymentIds := lo.Map(*checkouts, func(data models.Checkout, index int) uint64 {
+		return uint64(data.ID)
+	})
+	payments, paymentRPCError := grpc.GetPayments(c.Request().Context(), appState.GrpcPaymentClientConn, paymentIds)
+	if paymentRPCError != nil {
+		appState.Log.Error("Query GetPayments", zap.Error(paymentRPCError))
+	}
+
+	// Transform - mapping payment detail into checkout list
+	response := dto.TransformCheckoutSlice(*checkouts, payments.PaymentOrders)
+
+	if paymentRPCError == nil {
+		return c.JSON(http.StatusOK, response)
+	}
+	return c.JSON(http.StatusOK, checkouts)
 }

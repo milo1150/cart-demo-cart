@@ -29,7 +29,6 @@ type CheckoutItemShopJson struct {
 
 // Scan scan value into Jsonb, implements sql.Scanner interface
 func (s *CheckoutItemShopJson) Scan(value any) error {
-	fmt.Println("scan shop!!")
 	bytes, ok := value.([]byte)
 	if !ok {
 		return errors.New(fmt.Sprint("Failed to unmarshal CheckoutItemShopJson JSONB value:", value))

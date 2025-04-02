@@ -20,6 +20,7 @@ func SubscribeCreatePaymentEvent(js jetstream.JetStream, log *zap.Logger, db *go
 	})
 	if err != nil {
 		log.Error("Failed to create payment_order.created consumer", zap.Error(err))
+		return
 	}
 
 	cons.Consume(func(msg jetstream.Msg) {

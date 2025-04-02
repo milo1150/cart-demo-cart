@@ -19,7 +19,7 @@ type CheckoutItem struct {
 	Products  CheckoutItemProductJsonSlice `json:"products" gorm:"type:jsonb;not null"`
 
 	// Internal
-	CheckoutID uint
+	CheckoutID uint `json:"checkout_id"`
 }
 
 type CheckoutItemShopJson struct {
@@ -29,6 +29,7 @@ type CheckoutItemShopJson struct {
 
 // Scan scan value into Jsonb, implements sql.Scanner interface
 func (s *CheckoutItemShopJson) Scan(value any) error {
+	fmt.Println("scan shop!!")
 	bytes, ok := value.([]byte)
 	if !ok {
 		return errors.New(fmt.Sprint("Failed to unmarshal CheckoutItemShopJson JSONB value:", value))
@@ -36,6 +37,7 @@ func (s *CheckoutItemShopJson) Scan(value any) error {
 
 	result := CheckoutItemShopJson{}
 	err := json.Unmarshal(bytes, &result)
+	*s = result // mutate ref value, this line is very important
 	return err
 }
 
@@ -70,6 +72,7 @@ func (p *CheckoutItemProductJsonSlice) Scan(value any) error {
 
 	result := CheckoutItemProductJsonSlice{}
 	err := json.Unmarshal(bytes, &result)
+	*p = result // mutate ref value, this line is very important
 	return err
 }
 

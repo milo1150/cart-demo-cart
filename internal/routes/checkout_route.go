@@ -13,4 +13,8 @@ func CheckoutRoutes(e *echo.Echo, appState *types.AppState) {
 	checkoutGroups.POST("/create", func(c echo.Context) error {
 		return api.CreateCheckoutHandler(c, appState)
 	})
+
+	checkoutGroups.GET("/checkouts", func(c echo.Context) error {
+		return api.GetCheckoutsHandler(c, appState)
+	})
 }

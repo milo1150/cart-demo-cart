@@ -5,8 +5,8 @@ import (
 	"cart-service/internal/repositories"
 	"cart-service/internal/schemas"
 	"cart-service/internal/types"
+	"cart-service/internal/utils"
 	"net/http"
-	"strconv"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
@@ -25,10 +25,9 @@ func CreateCheckoutHandler(c echo.Context, appState *types.AppState) error {
 	}
 
 	// Extract user id from request header
-	xUserId := c.Request().Header.Get("X-User-Id")
-	userId, err := strconv.Atoi(xUserId)
+	userId, err := utils.GetUserIdFromRequestHeader(c)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, cartpkg.GetSimpleErrorMessage("invalid UserId"))
+		return c.JSON(http.StatusBadRequest, cartpkg.GetSimpleErrorMessage(err.Error()))
 	}
 
 	// Create checkout and checout_items
@@ -40,6 +39,22 @@ func CreateCheckoutHandler(c echo.Context, appState *types.AppState) error {
 
 	// Publish message to payment service
 	nats.PublishCreateCheckoutHandler(appState.JS, c.Request().Context(), res, appState.Log)
+
+	return c.JSON(http.StatusOK, res)
+}
+
+func GetCheckoutsHandler(c echo.Context, appState *types.AppState) error {
+	// Extract user id from request header
+	userId, err := utils.GetUserIdFromRequestHeader(c)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, cartpkg.GetSimpleErrorMessage(err.Error()))
+	}
+
+	rc := repositories.Checkout{DB: appState.DB}
+	res, err := rc.GetCheckouts(userId)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, cartpkg.GetSimpleErrorMessage(err.Error()))
+	}
 
 	return c.JSON(http.StatusOK, res)
 }

@@ -24,3 +24,15 @@ func (c *CheckoutItem) CreateCheckoutItem(payload *schemas.CheckoutItem, checkou
 
 	return &checkoutItem, nil
 }
+
+func (c *CheckoutItem) GetCheckoutItem(id uint) (*models.CheckoutItem, error) {
+	result := models.CheckoutItem{}
+
+	query := c.DB.Where("id = ?", id).Find(&result)
+
+	if query.Error != nil {
+		return nil, query.Error
+	}
+
+	return &result, nil
+}

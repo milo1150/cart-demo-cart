@@ -70,7 +70,7 @@ func (c *Checkout) UpdateCheckoutTotalPaidAmount(checkoutId, userId uint) error 
 func (c *Checkout) GetCheckout(userId, checkoutId uint) (*models.Checkout, error) {
 	result := models.Checkout{}
 
-	query := c.DB.Debug().Preload("CheckoutItems").Where("user_id = ? AND id = ?", userId, checkoutId).First(&result)
+	query := c.DB.Preload("CheckoutItems").Where("user_id = ? AND id = ?", userId, checkoutId).First(&result)
 
 	if query.Error != nil {
 		return nil, query.Error

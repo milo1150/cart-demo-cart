@@ -59,7 +59,7 @@ func (c *Checkout) GetCheckout(userId, checkoutId uint) (*models.Checkout, error
 func (c *Checkout) GetCheckouts(userId uint) (*[]models.Checkout, error) {
 	result := []models.Checkout{}
 
-	query := c.DB.Preload("CheckoutItems").Where("user_id = ?", userId).Find(&result)
+	query := c.DB.Preload("CheckoutItems").Order("updated_at DESC").Where("user_id = ?", userId).Find(&result)
 
 	if query.Error != nil {
 		return nil, query.Error

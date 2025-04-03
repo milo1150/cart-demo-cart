@@ -15,7 +15,7 @@ type CheckoutItemSlice []CheckoutItem
 
 type CheckoutItem struct {
 	Shop     models.CheckoutItemShopJson         `json:"shop" validate:"required"`
-	Products models.CheckoutItemProductJsonSlice `json:"product" validate:"required,dive"`
+	Products models.CheckoutItemProductJsonSlice `json:"products" validate:"required,dive"`
 }
 
 type CheckoutItemResponse struct {

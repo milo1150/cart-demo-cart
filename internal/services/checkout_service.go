@@ -47,10 +47,12 @@ func (c *CheckoutService) GetCheckoutsHandler(ctx echo.Context, userId uint) (*s
 		return nil, err
 	}
 
-	// Query payment detail list from payment service
-	paymentIds := lo.Map(*checkouts, func(data models.Checkout, index int) uint64 {
-		return uint64(data.ID)
+	// Filtered payment for query
+	paymentIds := lo.Map(*checkouts, func(checkout models.Checkout, index int) uint64 {
+		return uint64(checkout.PaymentId)
 	})
+
+	// Query payment detail list from payment service
 	payments, paymentRPCError := grpc.GetPayments(ctx.Request().Context(), c.AppState.GrpcPaymentClientConn, paymentIds)
 	if paymentRPCError != nil {
 		c.AppState.Log.Error("Query GetPayments", zap.Error(paymentRPCError))

@@ -15,12 +15,14 @@ type Checkout struct {
 func (c *Checkout) CreateCheckout(payload *schemas.CreateCheckoutItem, userId uint) (*models.Checkout, error) {
 	checkout := models.Checkout{UserId: userId}
 
-	// Transaction Checkout and CheckoutItem
+	// Transaction Checkout, CheckoutItem
 	txErr := c.DB.Transaction(func(tx *gorm.DB) error {
+		// Create checkout
 		if err := tx.Create(&checkout).Error; err != nil {
 			return err
 		}
 
+		// Create checkout_item
 		checkoutItemRepository := CheckoutItem{DB: tx}
 		for _, checkoutItem := range payload.CheckoutItems {
 			_, err := checkoutItemRepository.CreateCheckoutItem(&checkoutItem, checkout.ID)
@@ -28,6 +30,8 @@ func (c *Checkout) CreateCheckout(payload *schemas.CreateCheckoutItem, userId ui
 				return err
 			}
 		}
+
+		// TODO: update stock, if payment got cancel then refund stock.
 
 		return nil
 	})

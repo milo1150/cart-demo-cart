@@ -8,11 +8,12 @@ import (
 )
 
 type Checkout struct {
-	ID        uint           `json:"id" gorm:"primarykey"`
-	CreatedAt time.Time      `json:"created_at"`
-	UpdatedAt time.Time      `json:"updated_at"`
-	DeletedAt gorm.DeletedAt `json:"deleted_at" gorm:"index"`
-	Uuid      uuid.UUID      `json:"uuid" gorm:"not null;type:uuid;unique;index"`
+	ID              uint           `json:"id" gorm:"primarykey"`
+	CreatedAt       time.Time      `json:"created_at"`
+	UpdatedAt       time.Time      `json:"updated_at"`
+	DeletedAt       gorm.DeletedAt `json:"deleted_at" gorm:"index"`
+	Uuid            uuid.UUID      `json:"uuid" gorm:"not null;type:uuid;unique;index"`
+	TotalPaidAmount uint64         `json:"total_paid_amount"`
 
 	// Internal
 	CheckoutItems []CheckoutItem `json:"checkout_items"`
@@ -30,5 +31,14 @@ func (c *Checkout) BeforeCreate(tx *gorm.DB) error {
 		}
 		c.Uuid = uuidV7
 	}
+
 	return nil
+}
+
+func CalculateCheckoutTotalPaidAmount(items *[]CheckoutItem) uint64 {
+	var total uint64
+	for _, item := range *items {
+		total += item.TotalPaidAmount
+	}
+	return total
 }

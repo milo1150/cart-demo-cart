@@ -11,11 +11,12 @@ import (
 func TransformCheckout(model models.Checkout, payment *pb.GetPaymentOrderResponse) schemas.CheckoutItemResponse {
 	data := schemas.CheckoutItemResponse{
 		// Checkout: model,
-		ID:            model.ID,
-		CreatedAt:     model.CreatedAt,
-		UpdatedAt:     model.CreatedAt,
-		CheckoutItems: model.CheckoutItems,
-		Payment:       payment,
+		ID:              model.ID,
+		CreatedAt:       model.CreatedAt,
+		UpdatedAt:       model.CreatedAt,
+		CheckoutItems:   model.CheckoutItems,
+		Payment:         payment,
+		TotalPaidAmount: model.TotalPaidAmount,
 	}
 	return data
 }

@@ -11,15 +11,23 @@ import (
 )
 
 type CheckoutItem struct {
-	ID        uint                         `json:"id" gorm:"primarykey"`
-	CreatedAt time.Time                    `json:"created_at"`
-	UpdatedAt time.Time                    `json:"updated_at"`
-	DeletedAt gorm.DeletedAt               `json:"deleted_at" gorm:"index"`
-	Shop      CheckoutItemShopJson         `json:"shop" gorm:"type:jsonb;not null"`
-	Products  CheckoutItemProductJsonSlice `json:"products" gorm:"type:jsonb;not null"`
+	ID              uint                         `json:"id" gorm:"primarykey"`
+	CreatedAt       time.Time                    `json:"created_at"`
+	UpdatedAt       time.Time                    `json:"updated_at"`
+	DeletedAt       gorm.DeletedAt               `json:"deleted_at" gorm:"index"`
+	Shop            CheckoutItemShopJson         `json:"shop" gorm:"type:jsonb;not null"`
+	Products        CheckoutItemProductJsonSlice `json:"products" gorm:"type:jsonb;not null"`
+	TotalPaidAmount uint64                       `json:"total_paid_amount"`
 
 	// Internal
 	CheckoutID uint `json:"checkout_id"`
+}
+
+func (c *CheckoutItem) BeforeCreate(tx *gorm.DB) error {
+	if c.TotalPaidAmount == 0 && len(c.Products) > 0 {
+		c.TotalPaidAmount = calculateCheckoutItemPaidAmount(&c.Products)
+	}
+	return nil
 }
 
 type CheckoutItemShopJson struct {
@@ -58,6 +66,7 @@ type CheckoutItemProductJson struct {
 	Price       uint64 `json:"price" validate:"required"`
 	Stock       uint64 `json:"stock" validate:"required"`
 	Quantity    uint64 `json:"quantity" validate:"required"`
+	PaidAmount  uint64 `json:"paid_amount"`
 }
 
 type CheckoutItemProductJsonSlice []CheckoutItemProductJson
@@ -81,4 +90,12 @@ func (p CheckoutItemProductJsonSlice) Value() (driver.Value, error) {
 		return nil, nil
 	}
 	return json.Marshal(p)
+}
+
+func calculateCheckoutItemPaidAmount(items *CheckoutItemProductJsonSlice) uint64 {
+	var total uint64
+	for _, item := range *items {
+		total += item.PaidAmount
+	}
+	return total
 }

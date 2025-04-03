@@ -19,11 +19,12 @@ type CheckoutItem struct {
 }
 
 type CheckoutItemResponse struct {
-	ID            uint                        `json:"id"`
-	CreatedAt     time.Time                   `json:"created_at"`
-	UpdatedAt     time.Time                   `json:"updated_at"`
-	CheckoutItems []models.CheckoutItem       `json:"checkout_items"`
-	Payment       *pb.GetPaymentOrderResponse `json:"payment"`
+	ID              uint                        `json:"id"`
+	CreatedAt       time.Time                   `json:"created_at"`
+	UpdatedAt       time.Time                   `json:"updated_at"`
+	CheckoutItems   []models.CheckoutItem       `json:"checkout_items"`
+	Payment         *pb.GetPaymentOrderResponse `json:"payment"`
+	TotalPaidAmount uint64                      `json:"total_paid_amount"`
 }
 
 type CheckoutItemSliceResponse struct {

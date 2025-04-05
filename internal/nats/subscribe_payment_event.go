@@ -13,15 +13,43 @@ func SubscribeCreatePaymentEvent(js jetstream.JetStream, log *zap.Logger, db *go
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	cons, err := js.CreateOrUpdateConsumer(ctx, "PAYMENT_ORDER", jetstream.ConsumerConfig{
-		Durable:     "CONS_PAYMENT_ORDER_CREATED",
-		Description: "",
-		AckPolicy:   jetstream.AckExplicitPolicy,
-	})
-	if err != nil {
-		log.Error("Failed to create payment_order.created consumer", zap.Error(err))
-		return
-	}
+	streamConn := make(chan bool)
+	ticker := time.NewTicker(1 * time.Second)
+	var cons jetstream.Consumer
+
+	go func() {
+		defer ticker.Stop()
+
+		for {
+			select {
+			case tick := <-ticker.C:
+				// Create consumer
+				log.Info("retry create PAYMENT_ORDER consumer", zap.Time("tick", tick))
+				consumer, err := js.CreateOrUpdateConsumer(ctx, "PAYMENT_ORDER", jetstream.ConsumerConfig{
+					Durable:     "CONS_PAYMENT_ORDER_CREATED",
+					Description: "",
+					AckPolicy:   jetstream.AckExplicitPolicy,
+				})
+
+				// Log error if failed to create consumer
+				if err != nil {
+					log.Error("Failed to create payment_order.created consumer", zap.Error(err))
+					continue
+				}
+
+				// Create consumer is ok
+				log.Info("create PAYMENT_ORDER consumer OK")
+				cons = consumer
+				close(streamConn)
+				return
+
+			case <-streamConn:
+				return
+			}
+		}
+	}()
+
+	<-streamConn
 
 	cons.Consume(func(msg jetstream.Msg) {
 		err := SubscribeCreatePaymentHandler(db, msg)

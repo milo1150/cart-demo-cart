@@ -2,7 +2,6 @@ package repositories
 
 import (
 	"cart-service/internal/models"
-	"fmt"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"
@@ -36,7 +35,6 @@ func (c *Cart) GetCart(db *gorm.DB, cartId uint) (*models.Cart, error) {
 
 func (c *Cart) GetCartUuidByUserId(userId uint) (*uuid.UUID, error) {
 	cart := models.Cart{}
-	fmt.Println(userId)
 	query := c.DB.Where("user_id = ?", userId).First(&cart)
 	if query.Error != nil {
 		return nil, query.Error

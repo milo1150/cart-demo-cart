@@ -21,14 +21,7 @@ func (c *CartItem) AddCartItemToCart(db *gorm.DB, payload schemas.AddCartItemPay
 
 	// Update CartItem quantity if item already exists in cart
 	if cartItemExists {
-		cartItem, err := repositories.FindCartItem(db, payload.ShopId, payload.ProductId)
-		if err != nil {
-			return err
-		}
-
-		increase := payload.Quantity + cartItem.Quantity
-
-		if err := repositories.UpdateCartItemQuantity(db, payload.ShopId, payload.ProductId, increase); err != nil {
+		if err := repositories.UpdateCartItemQuantity(db, payload.ShopId, payload.ProductId, payload.Quantity); err != nil {
 			return err
 		}
 	}

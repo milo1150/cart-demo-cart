@@ -10,12 +10,9 @@ import (
 
 func TransformCartDetail(cart models.Cart, products []*pb.GetProductResponse) schemas.GetCartResponse {
 	result := schemas.GetCartResponse{
-		BaseModelSchema: schemas.BaseModelSchema{
-			ID:        cart.ID,
-			CreatedAt: cart.CreatedAt,
-			UpdatedAt: cart.UpdatedAt,
-			Uuid:      cart.Uuid,
-		},
+		CreatedAt: cart.CreatedAt,
+		UpdatedAt: cart.UpdatedAt,
+		Uuid:      cart.Uuid,
 		UserId:    cart.UserId,
 		CartItems: []schemas.CartItemResponse{},
 	}

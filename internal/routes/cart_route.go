@@ -14,7 +14,7 @@ func CartRoutes(e *echo.Echo, appState *types.AppState) {
 		return api.GetCartUUIDHandler(c, appState)
 	})
 
-	cartGroup.GET("/:cart-id", func(c echo.Context) error {
+	cartGroup.GET("/:cart-uuid", func(c echo.Context) error {
 		return api.GetCartHandler(c, appState)
 	})
 }

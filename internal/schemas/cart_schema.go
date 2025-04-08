@@ -1,9 +1,16 @@
 package schemas
 
-import pb "github.com/milo1150/cart-demo-proto/pkg/shop_product"
+import (
+	"time"
+
+	"github.com/google/uuid"
+	pb "github.com/milo1150/cart-demo-proto/pkg/shop_product"
+)
 
 type GetCartResponse struct {
-	BaseModelSchema
+	CreatedAt time.Time          `json:"created_at"`
+	UpdatedAt time.Time          `json:"updated_at"`
+	Uuid      uuid.UUID          `json:"uuid"`
 	UserId    uint               `json:"user_id"`
 	CartItems []CartItemResponse `json:"cart_items"`
 }

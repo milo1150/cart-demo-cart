@@ -7,22 +7,23 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	cartpkg "github.com/milo1150/cart-demo-pkg/pkg"
 )
 
 func GetCartHandler(c echo.Context, appState *types.AppState) error {
-	paramId := c.Param("cart-id")
+	cartUuidParam := c.Param("cart-uuid")
 
-	// Validate param
-	cartId, err := strconv.Atoi(paramId)
+	// Validate uuid param
+	cartUuid, err := uuid.Parse(cartUuidParam)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, cartpkg.GetSimpleErrorMessage(err.Error()))
 	}
 
 	// Find Cart
 	cartRepo := repositories.Cart{DB: appState.DB}
-	cart, err := cartRepo.GetCart(appState.DB, uint(cartId))
+	cart, err := cartRepo.GetCartByUuid(appState.DB, cartUuid)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, cartpkg.GetSimpleErrorMessage(err.Error()))
 	}

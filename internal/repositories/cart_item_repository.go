@@ -7,7 +7,11 @@ import (
 	"gorm.io/gorm"
 )
 
-func CreateCartItem(db *gorm.DB, payload schemas.AddCartItemPayload, cartId uint) error {
+type CartItem struct {
+	DB *gorm.DB
+}
+
+func (c *CartItem) CreateCartItem(payload schemas.AddCartItemPayload, cartId uint) error {
 	newCartItem := models.CartItem{
 		Quantity:  payload.Quantity,
 		CartID:    cartId,
@@ -15,17 +19,17 @@ func CreateCartItem(db *gorm.DB, payload schemas.AddCartItemPayload, cartId uint
 		ShopId:    payload.ShopId,
 	}
 
-	if err := db.Create(&newCartItem).Error; err != nil {
+	if err := c.DB.Create(&newCartItem).Error; err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func CartItemExists(db *gorm.DB, shopId uint, productId uint) (bool, error) {
+func (c *CartItem) CartItemExists(shopId uint, productId uint) (bool, error) {
 	cartItem := &models.CartItem{}
 
-	query := db.Where("shop_id = ? AND product_id = ?", shopId, productId).Find(cartItem)
+	query := c.DB.Where("shop_id = ? AND product_id = ?", shopId, productId).Find(cartItem)
 	if query.Error != nil {
 		return false, query.Error
 	}
@@ -37,10 +41,10 @@ func CartItemExists(db *gorm.DB, shopId uint, productId uint) (bool, error) {
 	return true, nil
 }
 
-func FindCartItem(db *gorm.DB, shopId uint, productId uint) (*models.CartItem, error) {
+func (c *CartItem) FindCartItem(shopId uint, productId uint) (*models.CartItem, error) {
 	cartItem := &models.CartItem{}
 
-	query := db.Where("shop_id = ? AND product_id = ?", shopId, productId).First(cartItem)
+	query := c.DB.Where("shop_id = ? AND product_id = ?", shopId, productId).First(cartItem)
 	if query.Error != nil {
 		return nil, query.Error
 	}
@@ -48,12 +52,16 @@ func FindCartItem(db *gorm.DB, shopId uint, productId uint) (*models.CartItem, e
 	return cartItem, nil
 }
 
-func UpdateCartItemQuantity(db *gorm.DB, shopId uint, productId uint, amount uint) error {
-	query := db.Model(&models.CartItem{}).
+func (c *CartItem) UpdateCartItemQuantity(shopId uint, productId uint, amount uint) error {
+	query := c.DB.Model(&models.CartItem{}).
 		Where("shop_id = ? AND product_id = ?", shopId, productId).
 		UpdateColumn("quantity", amount)
 	if query.Error != nil {
 		return query.Error
 	}
+	return nil
+}
+
+func (c *CartItem) RemoveCartItem() error {
 	return nil
 }

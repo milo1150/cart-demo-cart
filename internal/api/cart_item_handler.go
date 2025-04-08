@@ -31,7 +31,7 @@ func AddCartItemHandler(c echo.Context, appState *types.AppState) error {
 	}
 
 	// Handle should create new cart item or update quantity
-	cartItemService := services.CartItem{AppState: appState}
+	cartItemService := services.CartItem{DB: appState.DB}
 	if err := cartItemService.AddCartItemsToCart(payload, userId); err != nil {
 		return c.JSON(http.StatusInternalServerError, cartpkg.GetSimpleErrorMessage(err.Error()))
 	}

@@ -3,32 +3,33 @@ package services
 import (
 	"cart-service/internal/repositories"
 	"cart-service/internal/schemas"
-	"cart-service/internal/types"
 
 	"gorm.io/gorm"
 )
 
 type CartItem struct {
-	AppState *types.AppState
+	DB *gorm.DB
 }
 
-func (c *CartItem) AddCartItemToCart(db *gorm.DB, payload schemas.AddCartItemPayload, cartId uint) error {
+func (c *CartItem) AddCartItemToCart(payload schemas.AddCartItemPayload, cartId uint) error {
+	cartItemRepo := repositories.CartItem{DB: c.DB}
+
 	// Check if CartItem already existed
-	cartItemExists, err := repositories.CartItemExists(db, payload.ShopId, payload.ProductId)
+	cartItemExists, err := cartItemRepo.CartItemExists(payload.ShopId, payload.ProductId)
 	if err != nil {
 		return err
 	}
 
 	// Update CartItem quantity if item already exists in cart
 	if cartItemExists {
-		if err := repositories.UpdateCartItemQuantity(db, payload.ShopId, payload.ProductId, payload.Quantity); err != nil {
+		if err := cartItemRepo.UpdateCartItemQuantity(payload.ShopId, payload.ProductId, payload.Quantity); err != nil {
 			return err
 		}
 	}
 
 	// Create new CartItem
 	if !cartItemExists {
-		if err := repositories.CreateCartItem(db, payload, cartId); err != nil {
+		if err := cartItemRepo.CreateCartItem(payload, cartId); err != nil {
 			return err
 		}
 	}
@@ -37,18 +38,19 @@ func (c *CartItem) AddCartItemToCart(db *gorm.DB, payload schemas.AddCartItemPay
 }
 
 func (c *CartItem) AddCartItemsToCart(payload schemas.AddCartItemSlicesPayload, userId uint) error {
-	db := c.AppState.DB
+	db := c.DB
 
 	// Find Cart id
-	cartRepo := repositories.Cart{DB: c.AppState.DB}
+	cartRepo := repositories.Cart{DB: c.DB}
 	cartId, err := cartRepo.GetCartIdByUserId(userId)
 	if err != nil {
 		return err
 	}
 
 	err = db.Transaction(func(tx *gorm.DB) error {
+		cartItemTx := CartItem{DB: tx}
 		for _, cartItemPayload := range payload.CartItems {
-			err := c.AddCartItemToCart(tx, cartItemPayload, *cartId)
+			err := cartItemTx.AddCartItemToCart(cartItemPayload, *cartId)
 			if err != nil {
 				return err
 			}

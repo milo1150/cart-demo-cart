@@ -4,8 +4,8 @@ import (
 	"cart-service/internal/repositories"
 	"cart-service/internal/services"
 	"cart-service/internal/types"
+	"cart-service/internal/utils"
 	"net/http"
-	"strconv"
 
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
@@ -38,11 +38,10 @@ func GetCartHandler(c echo.Context, appState *types.AppState) error {
 }
 
 func GetCartUUIDHandler(c echo.Context, appState *types.AppState) error {
-	// Extract user id from forward header from auth service
-	xUserId := c.Request().Header.Get("X-User-Id")
-	userId, err := strconv.Atoi(xUserId)
+	// Extract user id from request header
+	userId, err := utils.GetUserIdFromRequestHeader(c)
 	if err != nil {
-		return c.JSON(http.StatusForbidden, "invalid user id")
+		return c.JSON(http.StatusBadRequest, cartpkg.GetSimpleErrorMessage(err.Error()))
 	}
 
 	cartRepo := repositories.Cart{DB: appState.DB}

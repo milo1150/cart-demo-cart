@@ -4,35 +4,64 @@ import (
 	"cart-service/internal/repositories"
 	"cart-service/internal/schemas"
 	"cart-service/internal/types"
+
+	"gorm.io/gorm"
 )
 
-func AddCartItemToCart(appState *types.AppState, payload schemas.AddCartItemPayload) error {
+type CartItem struct {
+	AppState *types.AppState
+}
+
+func (c *CartItem) AddCartItemToCart(db *gorm.DB, payload schemas.AddCartItemPayload, cartId uint) error {
 	// Check if CartItem already existed
-	cartItemExists, err := repositories.CartItemExists(appState.DB, payload.ShopId, payload.ProductId)
+	cartItemExists, err := repositories.CartItemExists(db, payload.ShopId, payload.ProductId)
 	if err != nil {
 		return err
 	}
 
-	// Update CartItem quantity
+	// Update CartItem quantity if item already exists in cart
 	if cartItemExists {
-		cartItem, err := repositories.FindCartItem(appState.DB, payload.ShopId, payload.ProductId)
+		cartItem, err := repositories.FindCartItem(db, payload.ShopId, payload.ProductId)
 		if err != nil {
 			return err
 		}
 
 		increase := payload.Quantity + cartItem.Quantity
 
-		if err := repositories.UpdateCartItemQuantity(appState.DB, payload.ShopId, payload.ProductId, increase); err != nil {
+		if err := repositories.UpdateCartItemQuantity(db, payload.ShopId, payload.ProductId, increase); err != nil {
 			return err
 		}
 	}
 
 	// Create new CartItem
 	if !cartItemExists {
-		if err := repositories.CreateCartItem(appState.DB, payload); err != nil {
+		if err := repositories.CreateCartItem(db, payload, cartId); err != nil {
 			return err
 		}
 	}
 
 	return nil
+}
+
+func (c *CartItem) AddCartItemsToCart(payload schemas.AddCartItemSlicesPayload, userId uint) error {
+	db := c.AppState.DB
+
+	// Find Cart id
+	cartRepo := repositories.Cart{DB: c.AppState.DB}
+	cartId, err := cartRepo.GetCartIdByUserId(userId)
+	if err != nil {
+		return err
+	}
+
+	err = db.Transaction(func(tx *gorm.DB) error {
+		for _, cartItemPayload := range payload.CartItems {
+			err := c.AddCartItemToCart(tx, cartItemPayload, *cartId)
+			if err != nil {
+				return err
+			}
+		}
+		return nil
+	})
+
+	return err
 }

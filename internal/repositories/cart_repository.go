@@ -51,3 +51,12 @@ func (c *Cart) GetCartUuidByUserId(userId uint) (*uuid.UUID, error) {
 	}
 	return &cart.Uuid, nil
 }
+
+func (c *Cart) GetCartIdByUserId(userId uint) (*uint, error) {
+	cart := models.Cart{}
+	query := c.DB.Where("user_id", userId).First(&cart)
+	if query.Error != nil {
+		return nil, query.Error
+	}
+	return &cart.ID, nil
+}

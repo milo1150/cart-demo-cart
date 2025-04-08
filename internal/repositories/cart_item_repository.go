@@ -7,10 +7,10 @@ import (
 	"gorm.io/gorm"
 )
 
-func CreateCartItem(db *gorm.DB, payload schemas.AddCartItemPayload) error {
+func CreateCartItem(db *gorm.DB, payload schemas.AddCartItemPayload, cartId uint) error {
 	newCartItem := models.CartItem{
 		Quantity:  payload.Quantity,
-		CartID:    payload.CartId,
+		CartID:    cartId,
 		ProductId: payload.ProductId,
 		ShopId:    payload.ShopId,
 	}

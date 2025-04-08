@@ -23,7 +23,7 @@ func GetCartHandler(c echo.Context, appState *types.AppState) error {
 
 	// Find Cart
 	cartRepo := repositories.Cart{DB: appState.DB}
-	cart, err := cartRepo.GetCartByUuid(appState.DB, cartUuid)
+	cart, err := cartRepo.GetCartByUuid(cartUuid)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, cartpkg.GetSimpleErrorMessage(err.Error()))
 	}

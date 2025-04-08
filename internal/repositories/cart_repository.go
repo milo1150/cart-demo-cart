@@ -11,35 +11,29 @@ type Cart struct {
 	DB *gorm.DB
 }
 
-func (c *Cart) CreateCart(db *gorm.DB, userId uint) error {
+func (c *Cart) CreateCart(userId uint) error {
 	newCart := models.Cart{
 		UserId: userId,
 	}
-
-	if err := db.Create(&newCart).Error; err != nil {
+	if err := c.DB.Create(&newCart).Error; err != nil {
 		return err
 	}
-
 	return nil
 }
 
-func (c *Cart) GetCart(db *gorm.DB, cartId uint) (*models.Cart, error) {
+func (c *Cart) GetCart(cartId uint) (*models.Cart, error) {
 	cart := models.Cart{}
-
-	if err := db.Preload("CartItems").First(&cart, cartId).Error; err != nil {
+	if err := c.DB.Preload("CartItems").First(&cart, cartId).Error; err != nil {
 		return nil, err
 	}
-
 	return &cart, nil
 }
 
-func (c *Cart) GetCartByUuid(db *gorm.DB, cartUuid uuid.UUID) (*models.Cart, error) {
+func (c *Cart) GetCartByUuid(cartUuid uuid.UUID) (*models.Cart, error) {
 	cart := models.Cart{}
-
-	if err := db.Preload("CartItems").Where("uuid = ?", cartUuid).First(&cart).Error; err != nil {
+	if err := c.DB.Preload("CartItems").Where("uuid = ?", cartUuid).First(&cart).Error; err != nil {
 		return nil, err
 	}
-
 	return &cart, nil
 }
 

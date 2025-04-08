@@ -26,7 +26,7 @@ func (c *CartItem) CreateCartItem(payload schemas.AddCartItemPayload, cartId uin
 	return nil
 }
 
-func (c *CartItem) CartItemExists(shopId uint, productId uint) (bool, error) {
+func (c *CartItem) CartItemExists(shopId, productId uint) (bool, error) {
 	cartItem := &models.CartItem{}
 
 	query := c.DB.Where("shop_id = ? AND product_id = ?", shopId, productId).Find(cartItem)
@@ -41,7 +41,7 @@ func (c *CartItem) CartItemExists(shopId uint, productId uint) (bool, error) {
 	return true, nil
 }
 
-func (c *CartItem) FindCartItem(shopId uint, productId uint) (*models.CartItem, error) {
+func (c *CartItem) FindCartItem(shopId, productId uint) (*models.CartItem, error) {
 	cartItem := &models.CartItem{}
 
 	query := c.DB.Where("shop_id = ? AND product_id = ?", shopId, productId).First(cartItem)
@@ -52,7 +52,7 @@ func (c *CartItem) FindCartItem(shopId uint, productId uint) (*models.CartItem, 
 	return cartItem, nil
 }
 
-func (c *CartItem) UpdateCartItemQuantity(shopId uint, productId uint, amount uint) error {
+func (c *CartItem) UpdateCartItemQuantity(shopId, productId, amount uint) error {
 	query := c.DB.Model(&models.CartItem{}).
 		Where("shop_id = ? AND product_id = ?", shopId, productId).
 		UpdateColumn("quantity", amount)
@@ -62,6 +62,13 @@ func (c *CartItem) UpdateCartItemQuantity(shopId uint, productId uint, amount ui
 	return nil
 }
 
-func (c *CartItem) RemoveCartItem() error {
+func (c *CartItem) RemoveCartItem(shopId, productId, cartId uint) error {
+	result := c.DB.
+		Unscoped(). // ! Hard delete
+		Where("shop_id = ? AND product_id = ? AND cart_id = ?", shopId, productId, cartId).
+		Delete(&models.CartItem{})
+	if result.Error != nil {
+		return result.Error
+	}
 	return nil
 }

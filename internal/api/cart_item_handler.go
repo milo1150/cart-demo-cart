@@ -33,8 +33,35 @@ func AddCartItemHandler(c echo.Context, appState *types.AppState) error {
 	// Handle should create new cart item or update quantity
 	cartItemService := services.CartItem{DB: appState.DB}
 	if err := cartItemService.AddCartItemsToCart(payload, userId); err != nil {
-		return c.JSON(http.StatusInternalServerError, cartpkg.GetSimpleErrorMessage(err.Error()))
+		return c.JSON(http.StatusUnprocessableEntity, cartpkg.GetSimpleErrorMessage(err.Error()))
 	}
 
 	return c.JSON(http.StatusOK, http.StatusOK)
+}
+
+func RemoveCartItemHandler(c echo.Context, appState *types.AppState) error {
+	payload := schemas.RemoveCartItemPayload{}
+	if err := c.Bind(&payload); err != nil {
+		return c.JSON(http.StatusBadRequest, cartpkg.GetSimpleErrorMessage(err.Error()))
+	}
+
+	// Validate payload
+	validate := validator.New()
+	if errMap := cartpkg.ValidateJsonPayload(validate, payload); errMap != nil {
+		return c.JSON(http.StatusBadRequest, errMap)
+	}
+
+	// Extract user id from request header
+	userId, err := utils.GetUserIdFromRequestHeader(c)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, cartpkg.GetSimpleErrorMessage(err.Error()))
+	}
+
+	// Remove cart item
+	cartItemService := services.CartItem{DB: appState.DB}
+	if err := cartItemService.RemoveCartItem(userId, payload); err != nil {
+		return c.JSON(http.StatusUnprocessableEntity, cartpkg.GetSimpleErrorMessage(err.Error()))
+	}
+
+	return c.NoContent(http.StatusNoContent)
 }

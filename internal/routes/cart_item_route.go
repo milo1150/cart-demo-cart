@@ -13,4 +13,8 @@ func CartItemRoutes(e *echo.Echo, appState *types.AppState) {
 	cartItemGroups.POST("/add", func(c echo.Context) error {
 		return api.AddCartItemHandler(c, appState)
 	})
+
+	cartItemGroups.POST("/remove", func(c echo.Context) error {
+		return api.RemoveCartItemHandler(c, appState)
+	})
 }

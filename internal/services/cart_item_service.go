@@ -60,3 +60,19 @@ func (c *CartItem) AddCartItemsToCart(payload schemas.AddCartItemSlicesPayload, 
 
 	return err
 }
+
+func (c *CartItem) RemoveCartItem(userId uint, payload schemas.RemoveCartItemPayload) error {
+	cartItemRepo := repositories.CartItem{DB: c.DB}
+	cartRepo := repositories.Cart{DB: c.DB}
+
+	cartId, err := cartRepo.GetCartIdByUserId(userId)
+	if err != nil {
+		return err
+	}
+
+	if err := cartItemRepo.RemoveCartItem(payload.ShopId, payload.ProductId, *cartId); err != nil {
+		return err
+	}
+
+	return nil
+}

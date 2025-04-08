@@ -9,3 +9,8 @@ type AddCartItemPayload struct {
 type AddCartItemSlicesPayload struct {
 	CartItems []AddCartItemPayload `json:"cart_items" validate:"required,dive"`
 }
+
+type RemoveCartItemPayload struct {
+	ProductId uint `json:"product_id" validate:"required"`
+	ShopId    uint `json:"shop_id" validate:"required"`
+}

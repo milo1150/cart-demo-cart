@@ -10,7 +10,11 @@ import (
 func CartRoutes(e *echo.Echo, appState *types.AppState) {
 	cartGroup := e.Group("/cart")
 
-	cartGroup.GET("/:id", func(c echo.Context) error {
+	cartGroup.GET("/get-cart", func(c echo.Context) error {
+		return api.GetCartUUIDHandler(c, appState)
+	})
+
+	cartGroup.GET("/:cart-id", func(c echo.Context) error {
 		return api.GetCartHandler(c, appState)
 	})
 }

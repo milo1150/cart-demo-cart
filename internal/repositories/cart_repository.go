@@ -2,11 +2,17 @@ package repositories
 
 import (
 	"cart-service/internal/models"
+	"fmt"
 
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
-func CreateCart(db *gorm.DB, userId uint) error {
+type Cart struct {
+	DB *gorm.DB
+}
+
+func (c *Cart) CreateCart(db *gorm.DB, userId uint) error {
 	newCart := models.Cart{
 		UserId: userId,
 	}
@@ -18,7 +24,7 @@ func CreateCart(db *gorm.DB, userId uint) error {
 	return nil
 }
 
-func GetCart(db *gorm.DB, cartId uint) (*models.Cart, error) {
+func (c *Cart) GetCart(db *gorm.DB, cartId uint) (*models.Cart, error) {
 	cart := &models.Cart{}
 
 	if err := db.Preload("CartItems").First(cart, cartId).Error; err != nil {
@@ -26,4 +32,14 @@ func GetCart(db *gorm.DB, cartId uint) (*models.Cart, error) {
 	}
 
 	return cart, nil
+}
+
+func (c *Cart) GetCartUuidByUserId(userId uint) (*uuid.UUID, error) {
+	cart := models.Cart{}
+	fmt.Println(userId)
+	query := c.DB.Where("user_id = ?", userId).First(&cart)
+	if query.Error != nil {
+		return nil, query.Error
+	}
+	return &cart.Uuid, nil
 }

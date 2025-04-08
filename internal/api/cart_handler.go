@@ -12,7 +12,7 @@ import (
 )
 
 func GetCartHandler(c echo.Context, appState *types.AppState) error {
-	paramId := c.Param("id")
+	paramId := c.Param("cart-id")
 
 	// Validate param
 	cartId, err := strconv.Atoi(paramId)
@@ -21,7 +21,8 @@ func GetCartHandler(c echo.Context, appState *types.AppState) error {
 	}
 
 	// Find Cart
-	cart, err := repositories.GetCart(appState.DB, uint(cartId))
+	cartRepo := repositories.Cart{DB: appState.DB}
+	cart, err := cartRepo.GetCart(appState.DB, uint(cartId))
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, cartpkg.GetSimpleErrorMessage(err.Error()))
 	}
@@ -33,4 +34,21 @@ func GetCartHandler(c echo.Context, appState *types.AppState) error {
 	}
 
 	return c.JSON(http.StatusOK, res)
+}
+
+func GetCartUUIDHandler(c echo.Context, appState *types.AppState) error {
+	// Extract user id from forward header from auth service
+	xUserId := c.Request().Header.Get("X-User-Id")
+	userId, err := strconv.Atoi(xUserId)
+	if err != nil {
+		return c.JSON(http.StatusForbidden, "invalid user id")
+	}
+
+	cartRepo := repositories.Cart{DB: appState.DB}
+	cartUuid, err := cartRepo.GetCartUuidByUserId(uint(userId))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, cartpkg.GetSimpleErrorMessage(err.Error()))
+	}
+
+	return c.JSON(http.StatusOK, cartUuid)
 }

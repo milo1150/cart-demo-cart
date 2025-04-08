@@ -22,7 +22,8 @@ func HandlerCreateUserEvent(msg *nats.Msg, log *zap.Logger, db *gorm.DB) {
 	)
 
 	// Create new Cart and binding UserID
-	if err := repositories.CreateCart(db, data); err != nil {
+	cartRepo := repositories.Cart{DB: db}
+	if err := cartRepo.CreateCart(db, data); err != nil {
 		log.Error(fmt.Sprintf("Failed to create Cart with UserID: %v", data))
 	}
 }

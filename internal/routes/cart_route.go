@@ -8,7 +8,7 @@ import (
 )
 
 func CartRoutes(e *echo.Echo, appState *types.AppState) {
-	cartGroup := e.Group("/cart")
+	cartGroup := e.Group("")
 
 	cartGroup.GET("/get-cart", func(c echo.Context) error {
 		return api.GetCartUUIDHandler(c, appState)

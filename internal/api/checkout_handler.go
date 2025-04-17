@@ -31,7 +31,7 @@ func CreateCheckoutHandler(c echo.Context, appState *types.AppState) error {
 
 	// Create checkout, checkout_items and publish message
 	checkoutService := services.CheckoutService{AppState: appState}
-	checkout, err := checkoutService.CreateCheckoutHandler(c, payload, userId)
+	checkout, err := checkoutService.CreateCheckout(c, payload, userId)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, cartpkg.GetSimpleErrorMessage(err.Error()))
 	}
@@ -47,7 +47,7 @@ func GetCheckoutsHandler(c echo.Context, appState *types.AppState) error {
 	}
 
 	checkoutService := services.CheckoutService{AppState: appState}
-	response, err := checkoutService.GetCheckoutsHandler(c, userId)
+	response, err := checkoutService.GetCheckouts(c, userId)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, cartpkg.GetSimpleErrorMessage(err.Error()))
 	}

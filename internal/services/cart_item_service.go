@@ -22,7 +22,7 @@ func (c *CartItem) AddCartItemToCart(payload schemas.AddCartItemPayload, cartId 
 
 	// Update CartItem quantity if item already exists in cart
 	if cartItemExists {
-		if err := cartItemRepo.UpdateCartItemQuantity(payload.ShopId, payload.ProductId, payload.Quantity); err != nil {
+		if err := cartItemRepo.UpdateCartItemQuantity(payload.ShopId, payload.ProductId, int64(payload.Quantity)); err != nil {
 			return err
 		}
 	}

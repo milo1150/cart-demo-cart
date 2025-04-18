@@ -10,7 +10,7 @@ require (
 	github.com/labstack/echo/v4 v4.13.3
 	github.com/milo1150/cart-demo-payment v0.0.1
 	github.com/milo1150/cart-demo-pkg v1.0.6
-	github.com/milo1150/cart-demo-proto v1.0.4
+	github.com/milo1150/cart-demo-proto v1.0.6
 	github.com/nats-io/nats.go v1.40.1
 	github.com/samber/lo v1.49.1
 	go.uber.org/zap v1.27.0

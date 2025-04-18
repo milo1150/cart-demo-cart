@@ -21,7 +21,7 @@ type CheckoutService struct {
 func (c *CheckoutService) syncCartItemQuantityWithStock(shopId uint, product models.CheckoutItemProductJson) error {
 	cartItemRepo := repositories.CartItem{DB: c.AppState.DB}
 
-	quantity := max(product.Stock-product.Quantity, 0)
+	quantity := min(product.Stock, product.Quantity, product.Stock-product.Quantity)
 
 	if quantity <= 0 {
 		cartItem, err := cartItemRepo.FindCartItem(shopId, product.Id)
@@ -34,7 +34,7 @@ func (c *CheckoutService) syncCartItemQuantityWithStock(shopId uint, product mod
 	}
 
 	if quantity > 0 {
-		if err := cartItemRepo.UpdateCartItemQuantity(shopId, product.Id, max(int64(quantity), 0)); err != nil {
+		if err := cartItemRepo.UpdateCartItemQuantity(shopId, product.Id, int64(quantity)); err != nil {
 			return err
 		}
 	}

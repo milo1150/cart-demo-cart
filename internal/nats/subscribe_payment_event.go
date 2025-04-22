@@ -14,7 +14,7 @@ func SubscribeCreatePaymentEvent(js jetstream.JetStream, log *zap.Logger, db *go
 	defer cancel()
 
 	streamConn := make(chan bool)
-	ticker := time.NewTicker(1 * time.Second)
+	ticker := time.NewTicker(2 * time.Second)
 	var cons jetstream.Consumer
 
 	go func() {

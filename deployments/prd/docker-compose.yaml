@@ -20,12 +20,10 @@ services:
 
   app:
     build:
-      context: ../../
-      dockerfile: deployments/dev/Dockerfile
+      context: ${APP_BUILD_CONTEXT}
+      dockerfile: deployments/prd/Dockerfile
     expose:
       - 1323
-    volumes:
-      - ../../:/app
     depends_on:
       postgres-cart:
         condition: service_healthy

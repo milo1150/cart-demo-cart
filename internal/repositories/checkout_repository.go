@@ -61,7 +61,7 @@ func (c *Checkout) UpdateCheckoutTotalPaidAmount(checkoutId, userId uint) error 
 	}
 
 	if result.RowsAffected == 0 {
-		return fmt.Errorf("Failed to update total_paid_amount: %w", err)
+		return fmt.Errorf("failed to update total_paid_amount: %w", err)
 	}
 
 	return nil

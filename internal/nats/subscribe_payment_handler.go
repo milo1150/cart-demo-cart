@@ -13,7 +13,7 @@ import (
 func SubscribeCreatePaymentHandler(db *gorm.DB, msg jetstream.Msg) error {
 	payload := schemas.PublishCreatedPaymentOrderPayload{}
 	if err := json.Unmarshal(msg.Data(), &payload); err != nil {
-		return fmt.Errorf("Failed to parse payment_order.created message payload: %w", err)
+		return fmt.Errorf("failed to parse payment_order.created message payload: %w", err)
 	}
 
 	rc := repositories.Checkout{DB: db}

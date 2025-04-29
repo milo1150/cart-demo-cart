@@ -18,7 +18,7 @@ services:
     networks:
       - cart-demo
 
-  app:
+  cart-service:
     build:
       context: ${APP_BUILD_CONTEXT}
       dockerfile: deployments/prd/Dockerfile

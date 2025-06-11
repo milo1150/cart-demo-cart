@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"cart-service/internal/models"
+	"errors"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"
@@ -32,7 +33,7 @@ func (c *Cart) GetCart(cartId uint) (*models.Cart, error) {
 func (c *Cart) GetCartByUuid(cartUuid uuid.UUID) (*models.Cart, error) {
 	cart := models.Cart{}
 	if err := c.DB.Preload("CartItems").Where("uuid = ?", cartUuid).First(&cart).Error; err != nil {
-		return nil, err
+		return nil, errors.New("cart by uuid not found")
 	}
 	return &cart, nil
 }

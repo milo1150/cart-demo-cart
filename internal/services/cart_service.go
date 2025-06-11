@@ -7,8 +7,10 @@ import (
 	"cart-service/internal/schemas"
 	"cart-service/internal/types"
 	"context"
+	"errors"
 
 	"github.com/samber/lo"
+	"go.uber.org/zap"
 )
 
 func GetProductIDsFromCartItems(carts []models.CartItem) []uint64 {
@@ -23,7 +25,9 @@ func GetCartItemsProducts(cart *models.Cart, appState *types.AppState) (*schemas
 	productIds := GetProductIDsFromCartItems(cart.CartItems)
 	res, err := grpc.GetProducts(context.Background(), appState.GrpcShopProductClientConn, productIds)
 	if err != nil {
-		return nil, err
+		msg := "failed to get cart item products"
+		appState.Log.Error(msg, zap.Error(err))
+		return nil, errors.New(msg)
 	}
 
 	// Transform cart detail
